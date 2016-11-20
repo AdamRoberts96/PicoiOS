@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */; };
 		3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */; };
 		3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA91DE1DE64009C62D4 /* ViewController.swift */; };
 		3098BEAD1DE1DE64009C62D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3098BEAB1DE1DE64009C62D4 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		3098BEA41DE1DE64009C62D4 /* Scanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3098BEA91DE1DE64009C62D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */,
 				3098BEA91DE1DE64009C62D4 /* ViewController.swift */,
+				3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */,
 				3098BEAB1DE1DE64009C62D4 /* Main.storyboard */,
 				3098BEAE1DE1DE64009C62D4 /* Assets.xcassets */,
 				3098BEB01DE1DE64009C62D4 /* LaunchScreen.storyboard */,
@@ -260,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */,
 				3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */,
 				3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */,
 			);
@@ -508,6 +512,7 @@
 				3098BECE1DE1DE65009C62D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3098BECF1DE1DE65009C62D4 /* Build configuration list for PBXNativeTarget "ScannerTests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +521,7 @@
 				3098BED11DE1DE65009C62D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3098BED21DE1DE65009C62D4 /* Build configuration list for PBXNativeTarget "ScannerUITests" */ = {
 			isa = XCConfigurationList;
@@ -524,6 +530,7 @@
 				3098BED41DE1DE65009C62D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
