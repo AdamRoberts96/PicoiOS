@@ -193,6 +193,7 @@
 				TargetAttributes = {
 					3098BEA31DE1DE64009C62D4 = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = DFS96U9YDQ;
 						ProvisioningStyle = Automatic;
 					};
 					3098BEB71DE1DE65009C62D4 = {
@@ -410,7 +411,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = DFS96U9YDQ;
 				INFOPLIST_FILE = Scanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Pico.Scanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -422,7 +425,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = DFS96U9YDQ;
 				INFOPLIST_FILE = Scanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Pico.Scanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
