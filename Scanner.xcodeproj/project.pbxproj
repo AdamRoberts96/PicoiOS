@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */; };
+		3072BE0B1DE236880083899C /* VisualCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3072BE0A1DE236880083899C /* VisualCode.swift */; };
+		3072BE0E1DE237820083899C /* SignedVisualCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3072BE0D1DE237820083899C /* SignedVisualCode.swift */; };
 		3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */; };
 		3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA91DE1DE64009C62D4 /* ViewController.swift */; };
 		3098BEAD1DE1DE64009C62D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3098BEAB1DE1DE64009C62D4 /* Main.storyboard */; };
@@ -36,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		3072BE0A1DE236880083899C /* VisualCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VisualCode.swift; path = ../VisualCode.swift; sourceTree = "<group>"; };
+		3072BE0D1DE237820083899C /* SignedVisualCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedVisualCode.swift; sourceTree = "<group>"; };
 		3098BEA41DE1DE64009C62D4 /* Scanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3098BEA91DE1DE64009C62D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3072BE0C1DE236930083899C /* VisualCode */ = {
+			isa = PBXGroup;
+			children = (
+				3072BE0A1DE236880083899C /* VisualCode.swift */,
+				3072BE0D1DE237820083899C /* SignedVisualCode.swift */,
+			);
+			name = VisualCode;
+			sourceTree = "<group>";
+		};
 		3098BE9B1DE1DE64009C62D4 = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +112,7 @@
 		3098BEA61DE1DE64009C62D4 /* Scanner */ = {
 			isa = PBXGroup;
 			children = (
+				3072BE0C1DE236930083899C /* VisualCode */,
 				3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */,
 				3098BEA91DE1DE64009C62D4 /* ViewController.swift */,
 				3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */,
@@ -263,8 +277,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3072BE0E1DE237820083899C /* SignedVisualCode.swift in Sources */,
 				3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */,
 				3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */,
+				3072BE0B1DE236880083899C /* VisualCode.swift in Sources */,
 				3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

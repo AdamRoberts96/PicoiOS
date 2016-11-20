@@ -99,13 +99,17 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func found(code: String) {
         captureSession.stopRunning()
-        let codeFoundAlert = UIAlertController(title: "Code found", message: code, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-            self.dismiss(animated: true)
-            self.captureSession.startRunning()
-        }
-        codeFoundAlert.addAction(OKAction)
-        present(codeFoundAlert, animated: true)
+        if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
+            let codeJson = JSON(data: dataFromString)
+            let type = codeJson["t"].stringValue
+            let typeAlert = UIAlertController(title: "Type found", message: "Type: " + type + ", Data: " + code, preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+                self.dismiss(animated: true)
+                self.captureSession.startRunning()
+            }
+            typeAlert.addAction(OKAction)
+            present(typeAlert, animated: true)
+        }   
     }
     
     override var prefersStatusBarHidden: Bool {
