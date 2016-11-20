@@ -62,7 +62,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func failed() {
-        let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
+        let ac = UIAlertController(title: "Error", message: "Could not connect to camera.", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
         captureSession = nil
@@ -94,16 +94,18 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
             found(code: readableObject.stringValue);
         }
         
-        //dismiss(animated: true)
+        
     }
     
     func found(code: String) {
-        let ac = UIAlertController(title: "Code found", message: code, preferredStyle: .alert)
+        captureSession.stopRunning()
+        let codeFoundAlert = UIAlertController(title: "Code found", message: code, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
             self.dismiss(animated: true)
+            self.captureSession.startRunning()
         }
-        ac.addAction(OKAction)
-        present(ac, animated: true)
+        codeFoundAlert.addAction(OKAction)
+        present(codeFoundAlert, animated: true)
     }
     
     override var prefersStatusBarHidden: Bool {
