@@ -101,8 +101,9 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         captureSession.stopRunning()
         if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
             let codeJson = JSON(data: dataFromString)
-            let type = codeJson["t"].stringValue
-            let typeAlert = UIAlertController(title: "Type found", message: "Type: " + type + ", Data: " + code, preferredStyle: .alert)
+            let codeType = codeJson["t"].stringValue
+            let fullMessage = getType(codeType: codeType)
+            let typeAlert = UIAlertController(title: "Code found", message: fullMessage, preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
                 self.dismiss(animated: true)
                 self.captureSession.startRunning()
@@ -110,6 +111,29 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
             typeAlert.addAction(OKAction)
             present(typeAlert, animated: true)
         }   
+    }
+    
+    func getType(codeType: String) -> String {
+        var message: String
+        switch codeType{
+            case "TP":
+                message = "Found SignedVisualCode"
+            case "DP":
+                message = "Found DelegatePairingVisualCode"
+            case "KA":
+                message = "Found KeyAuthenticationVisualCode"
+            case "KP":
+                message = "Found KeyPairingVisualCode"
+            case "LA":
+                message = "Found LensAuthenticationVisualCode"
+            case "LP":
+                message = "Found LensPairingVisualCode"
+            case "PA":
+                message = "Found ProxyAuthVisualCode"
+            default:
+                message = "Could not find a valid Pico code"
+        }
+        return message
     }
     
     override var prefersStatusBarHidden: Bool {
