@@ -21,7 +21,6 @@
 //  THE SOFTWARE.
 
 import Foundation
-import Scanner
 
 // MARK: - Error
 
