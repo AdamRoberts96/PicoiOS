@@ -11,10 +11,10 @@ import Foundation
 class SignedVisualCode: VisualCode {
    
     let  terminalName: String
-    let  nonce: String
+    let  nonce: Data
     
     
-    init(type: String, terminalName: String, nonce: String){
+    init(type: String, terminalName: String, nonce: Data){
         self.terminalName = terminalName
         self.nonce = nonce
         super.init(type: type)

@@ -4,9 +4,10 @@
 //
 //  Created by Adam Roberts on 14/12/2016.
 //  Copyright © 2016 Adam Roberts. All rights reserved.
-//
+// 
 
 import Foundation
+//Requires Alamofire library
 import Alamofire
 
 func sendGETRequest(url: String, parameters: Parameters) -> JSON{
