@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */; };
+		302350541E4760A900CC9ED8 /* GMEllipticCurveCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 302350511E4760A900CC9ED8 /* GMEllipticCurveCrypto.m */; };
+		302350551E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m in Sources */ = {isa = PBXBuildFile; fileRef = 302350531E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m */; };
+		302350601E4763D100CC9ED8 /* SigmaProver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3023505F1E4763D100CC9ED8 /* SigmaProver.swift */; };
+		302350691E47693A00CC9ED8 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302350681E47693A00CC9ED8 /* KeyPair.swift */; };
+		302350711E47EC6D00CC9ED8 /* com in Resources */ = {isa = PBXBuildFile; fileRef = 302350701E47EC6D00CC9ED8 /* com */; };
 		3040104D1E01AD57001D8FBD /* URLHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3040104C1E01AD57001D8FBD /* URLHandler.swift */; };
 		304010671E01AE89001D8FBD /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3040105A1E01AE2F001D8FBD /* Alamofire.framework */; };
 		304010681E01AE89001D8FBD /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3040105A1E01AE2F001D8FBD /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -119,6 +124,13 @@
 
 /* Begin PBXFileReference section */
 		3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		302350501E4760A900CC9ED8 /* GMEllipticCurveCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMEllipticCurveCrypto.h; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto.h"; sourceTree = "<group>"; };
+		302350511E4760A900CC9ED8 /* GMEllipticCurveCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMEllipticCurveCrypto.m; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto.m"; sourceTree = "<group>"; };
+		302350521E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GMEllipticCurveCrypto+hash.h"; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto+hash.h"; sourceTree = "<group>"; };
+		302350531E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GMEllipticCurveCrypto+hash.m"; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto+hash.m"; sourceTree = "<group>"; };
+		3023505F1E4763D100CC9ED8 /* SigmaProver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigmaProver.swift; sourceTree = "<group>"; };
+		302350681E47693A00CC9ED8 /* KeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
+		302350701E47EC6D00CC9ED8 /* com */ = {isa = PBXFileReference; lastKnownFileType = folder; path = com; sourceTree = "<group>"; };
 		3040104C1E01AD57001D8FBD /* URLHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHandler.swift; sourceTree = "<group>"; };
 		3040104E1E01AE2E001D8FBD /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = SOURCE_ROOT; };
 		306810841E2AFB5500815743 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -180,6 +192,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3023505D1E4760BF00CC9ED8 /* GMECC */ = {
+			isa = PBXGroup;
+			children = (
+				302350501E4760A900CC9ED8 /* GMEllipticCurveCrypto.h */,
+				302350511E4760A900CC9ED8 /* GMEllipticCurveCrypto.m */,
+				302350521E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.h */,
+				302350531E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m */,
+			);
+			name = GMECC;
+			sourceTree = "<group>";
+		};
+		3023506A1E47694000CC9ED8 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				3023505F1E4763D100CC9ED8 /* SigmaProver.swift */,
+				302350681E47693A00CC9ED8 /* KeyPair.swift */,
+			);
+			name = Crypto;
+			sourceTree = "<group>";
+		};
 		3040104F1E01AE2E001D8FBD /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,7 +249,6 @@
 				3068109A1E2E4DEF00815743 /* FMDatabasePool.h */,
 				3068109B1E2E4DEF00815743 /* FMDatabasePool.m */,
 				3068109C1E2E4DEF00815743 /* Info.plist */,
-				306810901E2E4DEE00815743 /* Scanner-Bridging-Header.h */,
 				306810A31E2E504300815743 /* DatabaseManager.swift */,
 			);
 			name = Database;
@@ -239,6 +270,7 @@
 				3098BEBB1DE1DE65009C62D4 /* ScannerTests */,
 				3098BEC61DE1DE65009C62D4 /* ScannerUITests */,
 				3098BEA51DE1DE64009C62D4 /* Products */,
+				3023505D1E4760BF00CC9ED8 /* GMECC */,
 				306810831E2AFB5400815743 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -256,6 +288,8 @@
 		3098BEA61DE1DE64009C62D4 /* Scanner */ = {
 			isa = PBXGroup;
 			children = (
+				302350701E47EC6D00CC9ED8 /* com */,
+				306810901E2E4DEE00815743 /* Scanner-Bridging-Header.h */,
 				3068108F1E2E4DCF00815743 /* Database */,
 				3040104E1E01AE2E001D8FBD /* Alamofire.xcodeproj */,
 				3072BE0C1DE236930083899C /* VisualCode */,
@@ -267,6 +301,7 @@
 				3098BEAE1DE1DE64009C62D4 /* Assets.xcassets */,
 				3098BEB01DE1DE64009C62D4 /* LaunchScreen.storyboard */,
 				3098BEB31DE1DE64009C62D4 /* Info.plist */,
+				3023506A1E47694000CC9ED8 /* Crypto */,
 			);
 			path = Scanner;
 			sourceTree = "<group>";
@@ -462,6 +497,7 @@
 				3098BEB21DE1DE64009C62D4 /* LaunchScreen.storyboard in Resources */,
 				3098BEAF1DE1DE64009C62D4 /* Assets.xcassets in Resources */,
 				3098BEAD1DE1DE64009C62D4 /* Main.storyboard in Resources */,
+				302350711E47EC6D00CC9ED8 /* com in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,16 +522,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302350551E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m in Sources */,
+				302350601E4763D100CC9ED8 /* SigmaProver.swift in Sources */,
 				3072BE0E1DE237820083899C /* SignedVisualCode.swift in Sources */,
 				3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */,
 				3040104D1E01AD57001D8FBD /* URLHandler.swift in Sources */,
 				3068109D1E2E4DEF00815743 /* FMDatabase.m in Sources */,
 				3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */,
 				306810A11E2E4DEF00815743 /* FMDatabasePool.m in Sources */,
+				302350541E4760A900CC9ED8 /* GMEllipticCurveCrypto.m in Sources */,
 				3072BE0B1DE236880083899C /* VisualCode.swift in Sources */,
 				3068109E1E2E4DEF00815743 /* FMResultSet.m in Sources */,
 				306810A41E2E504300815743 /* DatabaseManager.swift in Sources */,
 				3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */,
+				302350691E47693A00CC9ED8 /* KeyPair.swift in Sources */,
 				3068109F1E2E4DEF00815743 /* FMDatabaseQueue.m in Sources */,
 				306810A01E2E4DEF00815743 /* FMDatabaseAdditions.m in Sources */,
 			);
@@ -655,6 +695,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = DFS96U9YDQ;
+				HEADER_SEARCH_PATHS = "/Users/adamroberts/Downloads/j2objc-1.3.1/include";
 				INFOPLIST_FILE = Scanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -673,6 +714,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = DFS96U9YDQ;
+				HEADER_SEARCH_PATHS = "/Users/adamroberts/Downloads/j2objc-1.3.1/include";
 				INFOPLIST_FILE = Scanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

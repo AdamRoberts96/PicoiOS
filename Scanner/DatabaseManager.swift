@@ -38,6 +38,6 @@ func onStart() {
 }
 
 func storeData(){
-    let insertQuery = "INSERT INTO keystore";
-    let insertSuccesful =
+    //let insertQuery = "INSERT INTO keystore";
+    //let insertSuccesful =
 }

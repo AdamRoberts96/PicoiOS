@@ -59,6 +59,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         view.layer.addSublayer(previewLayer);
         
         captureSession.startRunning();
+        ecdh()
     }
     
     func failed() {
