@@ -4,7 +4,7 @@
 //
 
 #include "J2ObjC_source.h"
-#include "com/google/gson/ExclusionStrategy.h"
+#include "ExclusionStrategy.h"
 
 @interface ComGoogleGsonExclusionStrategy : NSObject
 

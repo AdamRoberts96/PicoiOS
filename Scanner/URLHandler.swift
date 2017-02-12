@@ -21,12 +21,13 @@ func sendGETRequest(url: String, parameters: Parameters) -> JSON{
         }
     }
     return result
+
 }
 
 func sendPOSTRequest(url: String, parameters: Parameters) -> (){
     Alamofire.request(url, method: .post, parameters: parameters).validate().responseJSON{ response in
         if response.result.isFailure{
-            print(response.result.error as! String)
-        }
+            print(response.result.debugDescription)
+        }   
     }
 }

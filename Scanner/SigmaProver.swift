@@ -21,7 +21,7 @@ func createKeys() -> KeyPair {
 func ecdh() -> () {
     let aliceCrypto : GMEllipticCurveCrypto = GMEllipticCurveCrypto.crypto(for: GMEllipticCurveSecp192r1) as!GMEllipticCurveCrypto
     let bobCrypto : GMEllipticCurveCrypto = GMEllipticCurveCrypto.crypto(for: GMEllipticCurveSecp192r1) as! GMEllipticCurveCrypto
-    
+    //
     let pKeyPair : KeyPair = createKeys()
     
     aliceCrypto.privateKeyBase64 = pKeyPair.getPrivateKey()

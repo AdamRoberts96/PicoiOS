@@ -1,4 +1,4 @@
-//
+    //
 //  ViewController.swift
 //  Scanner
 //
@@ -103,6 +103,38 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
             let codeJson = JSON(data: dataFromString)
             let codeType = codeJson["t"].stringValue
+            var address = codeJson["sa"].stringValue
+            print(address)
+            address = address.replacingOccurrences(of: "http://rendezvous.mypico.org/channel/" , with: "")
+            print(address)
+            var channel = channel_connect(address)
+            if (channel_open(channel)){
+                print("Channel opened")
+            }
+
+            var json = json_new()
+            let nonce = nonce_new()
+            nonce_generate_random(nonce)
+            var nonces = buffer_new(0)
+            print("nonce")
+            print(buffer_copy_to_new_string(nonces))
+            let message = messagestart_new();
+            var jbuff = buffer_new(0)
+            buffer_clear(jbuff)
+            let keypair = keypair_new()
+            keypair_generate(keypair)
+            var pub: String = ""
+            var priv: String = ""
+            keypair_export(keypair, pub, priv)
+            print("key")
+            print(pub)
+            //buffer_append_string(jbuff, "{\"picoEphemeralPublicKey\":\"A2+3D+9Aq/VQB8jdJ7+k1euTHX0iwas+mQ==\",\"picoNonce\":\"B64-NONCE\",\"picoVersion\":2}")
+            let unsafePointTest = ("{\"picoEphemeralPublicKey\":\"A2+3D+9AqdVQB8jdJ7+k1euTHX0iwas+mQ==\",\"picoNonce\":\"A2jd+3D+\",\"picoVersion\":2}" as NSString).utf8String
+            //channel_write(channel, UnsafeMutablePointer(mutating: unsafePointTest), Int32(strlen(unsafePointTest)))
+            //channel_write_buffer(channel, jbuff)
+            var buffer = buffer_new(0)
+            channel_read(channel, buffer)
+            print(buffer_copy_to_new_string(buffer))
             let fullMessage = getType(codeType: codeType)
             let typeAlert = UIAlertController(title: "Code found", message: fullMessage, preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
