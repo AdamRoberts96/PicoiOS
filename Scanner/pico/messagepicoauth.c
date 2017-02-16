@@ -341,4 +341,98 @@ bool messagepicoauth_verify_signature(MessagePicoAuth * messagepicoauth, Buffer 
 	return result;
 }
 
+void messagepicoauth_generate_signature(MessagePicoAuth * messagepicoauth, Buffer * bufferout) {
+    Buffer * bufferin;
+    KeyPair * picoIdentityKey;
+    
+    bufferin = buffer_new(0);
+    
+    messagepicoauth_get_bytes_to_sign(messagepicoauth, bufferin);
+    
+    
+    picoIdentityKey = shared_get_pico_identity_key(messagepicoauth->shared);
+    keypair_sign_data(picoIdentityKey, bufferin, bufferout);
+    
+    buffer_delete(bufferin);
+}
+
+void messagepicoauth_serialize(MessagePicoAuth * messagepicoauth, Buffer * buffer) {
+    Json * json;
+    Buffer * encrypted;
+    Buffer * iv;
+    Buffer * encoded;
+    Buffer * toEncrypt;
+    Buffer * pEncKey;
+    Buffer * pMacKey;
+    Buffer * picoIdPubEncoded;
+    KeyPair * picoIdentityKey;
+    
+    json = json_new();
+    encoded = buffer_new(0);
+    
+    json_add_decimal(json, "sessionId", messagepicoauth->sessionId);
+    
+    
+    // Encrypted data
+    toEncrypt = buffer_new(0);
+    
+    // servicePublicKeyBytes
+    buffer_clear(encoded);
+    
+    picoIdentityKey = shared_get_pico_identity_key(messagepicoauth->shared);
+    keypair_generate(picoIdentityKey);
+    
+    keypair_getpublicder(picoIdentityKey, encoded);
+    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
+    
+    // signature
+    buffer_clear(encoded);
+    messagepicoauth_generate_signature(messagepicoauth, encoded);
+    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
+    
+    // mac
+    buffer_clear(encoded);
+    picoIdPubEncoded = buffer_new(0);
+    keypair_getpublicder(picoIdentityKey, picoIdPubEncoded);
+    
+    pMacKey = shared_get_prover_mac_key(messagepicoauth->shared);
+    cryptosupport_generate_mac(pMacKey, picoIdPubEncoded, encoded);
+    buffer_delete(picoIdPubEncoded);
+    
+    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
+    
+    //extra data
+    buffer_clear(encoded);
+    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
+    
+    // Perform the encryption
+    iv = buffer_new(CRYPTOSUPPORT_IV_SIZE);
+    cryptosupport_generate_iv(iv);
+    
+    encrypted = buffer_new(0);
+    
+    pEncKey = shared_get_prover_enc_key(messagepicoauth->shared);
+    cryptosupport_encrypt(pEncKey, iv, toEncrypt, encrypted);
+    
+    buffer_clear(encoded);
+    base64_encode_buffer(encrypted, encoded);
+    
+    json_add_buffer(json, "encryptedData", encoded);
+    
+    buffer_clear(encoded);
+    base64_encode_buffer(iv, encoded);
+    
+    json_add_buffer(json, "iv", encoded);
+    buffer_delete(iv);
+    
+    
+    buffer_delete(encrypted);
+    buffer_delete(toEncrypt);
+    buffer_delete(encoded);
+    
+    json_serialize_buffer(json, buffer);
+    json_delete(json);
+}
+
+
 

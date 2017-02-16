@@ -38,15 +38,20 @@ typedef struct _Shared Shared;
 DLL_PUBLIC Shared * shared_new();
 DLL_PUBLIC void shared_delete(Shared * shared);
 DLL_PUBLIC void shared_generate_shared_secrets(Shared * shared);
+DLL_PUBLIC void shared_generate_shared_secrets_pico(Shared * shared);
 DLL_PUBLIC void shared_load_or_generate_keys(Shared * shared, char const * key_public, char const * key_private);
 
 DLL_PUBLIC Nonce * shared_get_service_nonce(Shared * shared);
 DLL_PUBLIC Nonce * shared_get_pico_nonce(Shared * shared);
 DLL_PUBLIC KeyPair * shared_get_service_identity_key(Shared * shared);
+DLL_PUBLIC KeyPair * shared_get_pico_identity_key(Shared * shared);
 DLL_PUBLIC KeyPair * shared_get_service_ephemeral_key(Shared * shared);
+DLL_PUBLIC KeyPair * shared_get_pico_ephemeral_key(Shared * shared);
 DLL_PUBLIC void shared_set_pico_identity_public_key(Shared * shared, EC_KEY * picoIdentityPublicKey);
+DLL_PUBLIC void shared_set_service_identity_public_key(Shared * shared, EC_KEY * picoIdentityPublicKey);
 DLL_PUBLIC EC_KEY * shared_get_pico_identity_public_key(Shared * shared);
 DLL_PUBLIC void shared_set_pico_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey);
+DLL_PUBLIC void shared_set_service_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey);
 DLL_PUBLIC EC_KEY * shared_get_pico_ephemeral_public_key(Shared * shared);
 
 DLL_PUBLIC Buffer * shared_get_prover_enc_key(Shared * shared) ;

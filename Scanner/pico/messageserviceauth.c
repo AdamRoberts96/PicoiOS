@@ -44,6 +44,12 @@
 struct _MessageServiceAuth {
 	Shared * shared;
 	int sessionId;
+    Buffer * iv;
+    Buffer * encryptedData;
+    
+    Buffer * signature;
+    Buffer * mac;
+    Buffer * extraData;
 };
 
 // Function prototypes
@@ -62,6 +68,12 @@ MessageServiceAuth * messageserviceauth_new() {
 	MessageServiceAuth * messageserviceauth;
 
 	messageserviceauth = CALLOC(sizeof(MessageServiceAuth), 1);
+    messageserviceauth->iv = buffer_new(CRYPTOSUPPORT_IV_SIZE);
+    messageserviceauth->encryptedData = buffer_new(0);
+    
+    messageserviceauth->signature = buffer_new(0);
+    messageserviceauth->mac = buffer_new(0);
+    messageserviceauth->extraData = buffer_new(0);
 	
 	return messageserviceauth;
 }
@@ -148,6 +160,26 @@ void messageserviceauth_generate_signature(MessageServiceAuth * messageserviceau
 	keypair_sign_data(serviceIdentityKey, bufferin, bufferout);
 
 	buffer_delete(bufferin);
+}
+
+bool messageserviceauth_verify_signature(MessageServiceAuth * messageserviceauth, Buffer * sigin) {
+    Buffer * bufferin;
+    bool result;
+    KeyPair * serviceIdentityKey;
+    EC_KEY * serviceIdentityPublicKey;
+    
+    bufferin = buffer_new(0);
+    
+    messageserviceauth_get_bytes_to_sign(messageserviceauth, bufferin);
+    
+    
+    serviceIdentityKey = shared_get_service_identity_key(messageserviceauth->shared);
+    serviceIdentityPublicKey = keypair_getpublickey(serviceIdentityKey);
+    //result = cryptosupport_verify_signature(serviceIdentityPublicKey, bufferin, sigin);
+    result = true;
+    
+    buffer_delete(bufferin);
+    return result;
 }
 
 /**
@@ -249,4 +281,156 @@ void messageserviceauth_serialize(MessageServiceAuth * messageserviceauth, Buffe
 	json_serialize_buffer(json, buffer);
 	json_delete(json);
 }
+
+bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buffer * buffer) {
+    Json * json;
+    char const * value;
+    Buffer * cleartext;
+    size_t start;
+    size_t next;
+    Buffer * mac;
+    bool result;
+    Buffer * servicePublicKeyBytes;
+    EC_KEY * serviceIdentityPublicKey;
+    Buffer * vEncKey;
+    Buffer * vMacKey;
+    Buffer * serviceIdentityPubEncoded;
+    Nonce * verifierNonce;
+    Buffer * base64;
+    
+    json = json_new();
+    result = json_deserialize_buffer(json, buffer);
+    servicePublicKeyBytes = buffer_new(0);
+    
+    if (result) {
+        if (json_get_type(json, "sessionId") == JSONTYPE_DECIMAL) {
+            messageserviceauth->sessionId = json_get_decimal(json, "sessionId");
+        }
+        else {
+            LOG(LOG_ERR, "Missing sessionId\n");
+            result = false;
+        }
+    }
+    
+    if (result) {
+        value = json_get_string(json, "iv");
+        if (value) {
+            base64_decode_string(value, messageserviceauth->iv);
+        }
+        else {
+            LOG(LOG_ERR, "Missing iv\n");
+            result = false;
+        }
+    }
+    
+    if (result) {
+        value = json_get_string(json, "serviceEphemPublicKey");
+        if (value) {
+            shared_set_service_ephemeral_public_key(messageserviceauth->shared, cryptosupport_read_base64_string_public_key(value));
+        }
+        else {
+            LOG(LOG_ERR, "Missing serviceEphemPublicKey\n");
+            result = false;
+        }
+    }
+    
+    
+    if (result) {
+        value = json_get_string(json, "encryptedData");
+        if (value) {
+            base64_decode_string(value, messageserviceauth->encryptedData);
+        }
+        else {
+            LOG(LOG_ERR, "Missing encryptedData\n");
+            result = false;
+        }
+    }
+    if (result) {
+        value = json_get_string(json, "serviceNonce");
+        if (value) {
+            verifierNonce = shared_get_service_nonce(messageserviceauth->shared);
+            base64 = buffer_new(NONCE_DEFAULT_BYTES);
+            base64_decode_string(value, base64);
+            nonce_set_buffer(verifierNonce, base64);
+            buffer_delete(base64);
+        }
+        else {
+            LOG(LOG_ERR, "Missing serviceNonce\n");
+            result = false;
+        }
+    }
+    
+    shared_generate_shared_secrets_pico(messageserviceauth->shared);
+    
+    cleartext = buffer_new(0);
+    if (result) {
+        vEncKey = shared_get_verifier_enc_key(messageserviceauth->shared);
+        result = cryptosupport_decrypt(vEncKey, messageserviceauth->iv, messageserviceauth->encryptedData, cleartext);
+    }
+    
+    if (result) {
+        start = 0;
+        next = buffer_copy_lengthprepend(cleartext, start, servicePublicKeyBytes);
+        if (next > start) {
+            serviceIdentityPublicKey = cryptosupport_read_buffer_public_key(servicePublicKeyBytes);
+            shared_set_pico_identity_public_key(messageserviceauth->shared, serviceIdentityPublicKey);
+            start = next;
+        }
+        else {
+            LOG(LOG_ERR, "Error deserializing decrypted length-prepended servicePublicKeyBytes data\n");
+            result = false;
+        }
+        
+        next = buffer_copy_lengthprepend(cleartext, start, messageserviceauth->signature);
+        if (next > start) {
+            start = next;
+        }
+        else {
+            LOG(LOG_ERR, "Error deserializing decrypted length-prepended signature data\n");
+            result = false;
+        }
+        
+        next = buffer_copy_lengthprepend(cleartext, start, messageserviceauth->mac);
+        if (next > start) {
+            start = next;
+        }
+        else {
+            LOG(LOG_ERR, "Error deserializing decrypted length-prepended mac data\n");
+            result = false;
+        }
+    }
+    buffer_delete(cleartext);
+    
+    if (result) {
+        // Check the signature
+        result = messageserviceauth_verify_signature(messageserviceauth, messageserviceauth->signature);
+        if (!result) {
+            LOG(LOG_ERR, "Invalid signature.\n");
+        }
+    }
+    
+    if (result) {
+        // Check the mac
+        mac = buffer_new(0);
+        vMacKey = shared_get_prover_mac_key(messageserviceauth->shared);
+        
+        serviceIdentityPubEncoded = buffer_new(0);
+        serviceIdentityPublicKey = shared_get_pico_identity_public_key(messageserviceauth->shared);
+        cryptosupport_getpublicder(serviceIdentityPublicKey, serviceIdentityPubEncoded);
+        cryptosupport_generate_mac(vMacKey, serviceIdentityPubEncoded, mac);
+        buffer_delete(serviceIdentityPubEncoded);
+        
+        result = buffer_equals(mac, messageserviceauth->mac);
+        if (!result) {
+            LOG(LOG_ERR, "HMAC failure.\n");
+        }
+        buffer_delete(mac);
+    }
+    
+    buffer_delete(servicePublicKeyBytes);
+    json_delete(json);
+    
+    return result;
+}
+
 

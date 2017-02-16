@@ -43,6 +43,8 @@ void messagepicoauth_delete(MessagePicoAuth * messagepicoauth);
 void messagepicoauth_set(MessagePicoAuth * messagepicoauth, Shared * shared);
 Buffer * messagepicoauth_get_extra_data(MessagePicoAuth * messagepicoauth);
 bool messagepicoauth_deserialize(MessagePicoAuth * messagepicoauth, Buffer * buffer);
+void messagepicoauth_serialize(MessagePicoAuth * messagepicoauth, Buffer * buffer);
+
 
 // Function definitions
 

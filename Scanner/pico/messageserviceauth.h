@@ -42,6 +42,7 @@ MessageServiceAuth * messageserviceauth_new();
 void messageserviceauth_delete(MessageServiceAuth * messageserviceauth);
 void messageserviceauth_set(MessageServiceAuth * messageserviceauth, Shared * shared, int sessionId);
 void messageserviceauth_serialize(MessageServiceAuth * messageserviceauth, Buffer * buffer);
+bool messageserviceauth_deserialize(MessageServiceAuth * messagepicoauth, Buffer * buffer);
 
 // Function definitions
 

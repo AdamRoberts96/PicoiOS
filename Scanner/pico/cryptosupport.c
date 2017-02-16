@@ -376,7 +376,7 @@ bool cryptosupport_decrypt(Buffer * key, Buffer * iv, Buffer * bufferin, Buffer 
 	if (result == 1) {
 		length_written += length_out;
 
-		result = EVP_CipherFinal_ex(ctx, bufferout + length_written, & length_out);
+		result = EVP_CipherFinal_ex(ctx, bufferout + length_written, &length_out);
 	}
 	
 	if (result == 1) {
@@ -389,7 +389,7 @@ bool cryptosupport_decrypt(Buffer * key, Buffer * iv, Buffer * bufferin, Buffer 
 	EVP_CIPHER_CTX_free(ctx);
 
 	if (result != 1) {
-		LOG(LOG_ERR, "Error decrypting data: %lu\n", ERR_get_error());
+		LOG(LOG_ERR, "Error decrypting data: %lu\n", ERR_error_string(ERR_get_error(), NULL));
 	}
 
 	return (result == 1);

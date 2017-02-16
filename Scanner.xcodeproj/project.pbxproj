@@ -423,7 +423,6 @@
 		3040B7EB1E4A9189009A37A0 /* sigmakeyderiv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sigmakeyderiv.c; path = Scanner/pico/sigmakeyderiv.c; sourceTree = "<group>"; };
 		3040B7EC1E4A9189009A37A0 /* sigmakeyderiv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sigmakeyderiv.h; path = Scanner/pico/sigmakeyderiv.h; sourceTree = "<group>"; };
 		3040B7ED1E4A9189009A37A0 /* sigmaverifier.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sigmaverifier.c; path = Scanner/pico/sigmaverifier.c; sourceTree = "<group>"; };
-		3040B7EE1E4A9189009A37A0 /* sigmaverifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sigmaverifier.h; path = Scanner/pico/sigmaverifier.h; sourceTree = "<group>"; };
 		3040B7EF1E4A9189009A37A0 /* users.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = users.c; path = Scanner/pico/users.c; sourceTree = "<group>"; };
 		3040B7F01E4A9189009A37A0 /* users.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = users.h; path = Scanner/pico/users.h; sourceTree = "<group>"; };
 		3040B81C1E4A995A009A37A0 /* curl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = curl.h; path = Scanner/curl/curl.h; sourceTree = "<group>"; };
@@ -3181,6 +3180,8 @@
 		3098BEC71DE1DE65009C62D4 /* ScannerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerUITests.swift; sourceTree = "<group>"; };
 		3098BEC91DE1DE65009C62D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30A48B5F1E4FC92C0097E840 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
+		30A48B691E53779A0097E840 /* sigmaverifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaverifier.h; path = Scanner/pico/sigmaverifier.h; sourceTree = "<group>"; };
+		30A48B6A1E5377A00097E840 /* sigmaprover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaprover.h; path = Scanner/pico/sigmaprover.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3404,8 +3405,9 @@
 				3040B7EB1E4A9189009A37A0 /* sigmakeyderiv.c */,
 				3040B7EC1E4A9189009A37A0 /* sigmakeyderiv.h */,
 				3007FF631E4FA37F00777BBA /* sigmaprover.c */,
+				30A48B6A1E5377A00097E840 /* sigmaprover.h */,
 				3040B7ED1E4A9189009A37A0 /* sigmaverifier.c */,
-				3040B7EE1E4A9189009A37A0 /* sigmaverifier.h */,
+				30A48B691E53779A0097E840 /* sigmaverifier.h */,
 				3040B7EF1E4A9189009A37A0 /* users.c */,
 				3040B7F01E4A9189009A37A0 /* users.h */,
 				3040B7AC1E4A9178009A37A0 /* pico.swift */,
@@ -8630,9 +8632,11 @@
 				ARCHS = arm64;
 				"ARCHS[sdk=*]" = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = DFS96U9YDQ;
 				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/Scanner/";
 				INFOPLIST_FILE = Scanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -8662,9 +8666,11 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = DFS96U9YDQ;
 				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/Scanner/";
 				INFOPLIST_FILE = Scanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

@@ -49,8 +49,12 @@ struct _Shared {
 
 	KeyPair * serviceIdentityKey;
 	KeyPair * serviceEphemeralKey;
+    KeyPair * picoIdentityKey;
+    KeyPair * picoEphemeralKey;
 	EC_KEY * picoIdentityPublicKey;
 	EC_KEY * picoEphemeralPublicKey;
+    EC_KEY * serviceIdentityPublicKey;
+    EC_KEY * serviceEphemeralPublicKey;
 };
 
 // Function prototypes
@@ -82,9 +86,13 @@ Shared * shared_new() {
 
 	shared->serviceIdentityKey = keypair_new();
 	shared->serviceEphemeralKey = keypair_new();
+    shared->picoIdentityKey = keypair_new();
+    shared->picoEphemeralKey = keypair_new();
 
 	shared->picoIdentityPublicKey = NULL;
 	shared->picoEphemeralPublicKey = NULL;
+    shared->serviceIdentityPublicKey = NULL;
+    shared->serviceEphemeralPublicKey = NULL;
 
 	return shared;
 }
@@ -195,6 +203,36 @@ void shared_generate_shared_secrets(Shared * shared) {
 	sigmakeyderiv_delete(sigmakeyderiv);
 }
 
+void shared_generate_shared_secrets_pico(Shared * shared) {
+    Buffer * sharedSecret;
+    EVP_PKEY * pEphemPriv;
+    SigmaKeyDeriv * sigmakeyderiv;
+    
+    // Generate ECDH shared secret
+    sharedSecret = buffer_new(0);
+    
+    pEphemPriv = keypair_getprivatekey(shared->picoEphemeralKey);
+    
+    keyagreement_generate_secret(pEphemPriv, shared->serviceEphemeralPublicKey, sharedSecret);
+    
+    // Generate key data
+    sigmakeyderiv = sigmakeyderiv_new();
+    sigmakeyderiv_set(sigmakeyderiv, sharedSecret, shared->picoNonce, shared->serviceNonce);
+    buffer_delete(sharedSecret);
+    
+    sigmakeyderiv_get_next_key(sigmakeyderiv, shared->pMacKey, 256);
+    
+    sigmakeyderiv_get_next_key(sigmakeyderiv, shared->pEncKey, 128);
+    
+    sigmakeyderiv_get_next_key(sigmakeyderiv, shared->vMacKey, 256);
+    
+    sigmakeyderiv_get_next_key(sigmakeyderiv, shared->vEncKey, 128);
+    
+    sigmakeyderiv_get_next_key(sigmakeyderiv, shared->sharedKey, 128);
+    
+    sigmakeyderiv_delete(sigmakeyderiv);
+}
+
 /**
  * Returns the service's nonce from the Shared object.
  *
@@ -226,6 +264,16 @@ KeyPair * shared_get_service_identity_key(Shared * shared) {
 }
 
 /**
+ * Returns the pico's long term identity key pair from the Shared object.
+ *
+ * @param shared The Shared object to get the details from
+ * @return The service's long term identity key pair
+ */
+KeyPair * shared_get_pico_identity_key(Shared * shared) {
+    return shared->picoIdentityKey;
+}
+
+/**
  * Returns the service's ephemeral key pair from the Shared object.
  *
  * @param shared The Shared object to get the details from
@@ -236,12 +284,31 @@ KeyPair * shared_get_service_ephemeral_key(Shared * shared) {
 }
 
 /**
+ * Returns the picos's ephemeral key pair from the Shared object.
+ *
+ * @param shared The Shared object to get the details from
+ * @return The service's ephemeral key pair
+ */
+KeyPair * shared_get_pico_ephemeral_key(Shared * shared) {
+    return shared->picoEphemeralKey;
+}
+
+/**
  * Sets the Pico's long term identity public key.
  *
  * @param shared The Shared object to store the details in
  */
 void shared_set_pico_identity_public_key(Shared * shared, EC_KEY * picoIdentityPublicKey) {
 	shared->picoIdentityPublicKey = picoIdentityPublicKey;
+}
+
+/**
+ * Sets the Service's long term identity public key.
+ *
+ * @param shared The Shared object to store the details in
+ */
+void shared_set_service_identity_public_key(Shared * shared, EC_KEY * serviceIdentityPublicKey) {
+    shared->serviceIdentityPublicKey = serviceIdentityPublicKey;
 }
 
 /**
@@ -261,6 +328,15 @@ EC_KEY * shared_get_pico_identity_public_key(Shared * shared) {
  */
 void shared_set_pico_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey) {
 	shared->picoEphemeralPublicKey = picoEphemeralPublicKey;
+}
+
+/**
+ * Sets the Service's ephemeral public key.
+ *
+ * @param shared The Shared object to store the details in
+ */
+void shared_set_service_ephemeral_public_key(Shared * shared, EC_KEY * serviceEphemeralPublicKey) {
+    shared->serviceEphemeralPublicKey = serviceEphemeralPublicKey;
 }
 
 /**

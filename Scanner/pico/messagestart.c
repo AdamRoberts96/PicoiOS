@@ -157,27 +157,46 @@ bool messagestart_serialize(MessageStart * messagestart, Buffer * buffer){
     bool result;
     result = true;
     Json * json;
+    json = json_new();
     Buffer * picoEphemeralKeyBuffer;
     Shared * sharedData;
     Buffer * b64string;
     unsigned char const * nonceBuffer;
     sharedData = messagestart->shared;
-    picoEphemeralKeyBuffer = buffer_new(34);
-    cryptosupport_generate_commitment_base64(shared_get_pico_ephemeral_public_key(sharedData), picoEphemeralKeyBuffer);
-    //buffer_append_string(picoEphemeralKeyBuffer, "A2+3D+9Aq/VQB8jdJ7+k1euTHX0iwas+mQ");
-    json_add_buffer(json, "picoEphemeralPublicKey" , picoEphemeralKeyBuffer);
+    KeyPair * keypair;
+    keypair = shared_get_pico_ephemeral_key(messagestart->shared);
+    keypair_generate(keypair);
+    picoEphemeralKeyBuffer = buffer_new(0);
+    keypair_getpublicder(keypair, picoEphemeralKeyBuffer);
+    Buffer * encoded;
+    encoded = buffer_new(0);
+    shared_set_pico_ephemeral_public_key(messagestart->shared, keypair_getpublickey(keypair));
+    keypair_getpublicpem(keypair, encoded);
+    //base64_encode_buffer(picoEphemeralKeyBuffer, encoded);
+    json_add_buffer(json, "picoEphemeralPublicKey" , encoded);
     Nonce * nonce;
-    nonce = nonce_new();
+    nonce = shared_get_pico_nonce(messagestart->shared);
     nonce_generate_random(nonce);
     
     b64string = buffer_new(NONCE_DEFAULT_BYTES);
     
-    nonceBuffer = nonce_get_buffer(nonce);
-    base64_decode_string((char const *)nonceBuffer, b64string);
-    json_add_buffer(json, "picoNonce", b64string);
     
+    
+    nonceBuffer = nonce_get_buffer(nonce);
+    base64_encode_mem((char const *)nonce_get_buffer(nonce), nonce_get_length(nonce), b64string);
+    //base64_encode_string((char const *)nonceBuffer, b64string);
+    json_add_buffer(json, "picoNonce", b64string);
+    Nonce * sharedNonce;
+    sharedNonce = nonce_new();
+    sharedNonce = shared_get_pico_nonce(messagestart->shared);
+    Buffer * decoded;
+    decoded = buffer_new(NONCE_DEFAULT_BYTES);
+    base64_decode_string(buffer_get_buffer(b64string), decoded);
+    nonce_set_buffer(sharedNonce, decoded);
     json_add_decimal(json, "picoVersion", 2);
     json_serialize_buffer(json, buffer);
+    
+    
     
     return result;
 }

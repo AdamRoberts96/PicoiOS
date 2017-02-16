@@ -18,3 +18,4 @@
 #import "messagestart.h"
 #import "json.h"
 #import "keypair.h"
+#import "sigmaprover.h"
