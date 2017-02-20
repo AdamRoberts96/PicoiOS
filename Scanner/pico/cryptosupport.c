@@ -181,7 +181,7 @@ bool cryptosupport_verify_signature(EC_KEY * publickey, Buffer const * bufferin,
 
 	EVP_MD_CTX_destroy(mdctx);
 
-	if (result < 0) {
+	if (result == 0) {
 		LOG(LOG_ERR, "Error verifying signature: %lu\n", ERR_get_error());
 	}
 
@@ -252,10 +252,10 @@ EC_KEY * cryptosupport_read_buffer_public_key(Buffer * keybuffer) {
 	unsigned char const * keydata;
 
 	keydata = (unsigned char const *)buffer_get_buffer(keybuffer);
-
+    ERR_clear_error();
 	eckey = d2i_EC_PUBKEY(NULL, & keydata, buffer_get_pos(keybuffer));
 	if (eckey == NULL) {
-		LOG(LOG_ERR, "Error reading public key: %lu\n", ERR_get_error());
+		LOG(LOG_ERR, "Error reading public key: %su\n", ERR_error_string(ERR_get_error(), NULL));
 	}
 
 	return eckey;

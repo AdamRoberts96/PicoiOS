@@ -172,19 +172,13 @@ bool messagestart_serialize(MessageStart * messagestart, Buffer * buffer){
     encoded = buffer_new(0);
     shared_set_pico_ephemeral_public_key(messagestart->shared, keypair_getpublickey(keypair));
     keypair_getpublicpem(keypair, encoded);
-    //base64_encode_buffer(picoEphemeralKeyBuffer, encoded);
     json_add_buffer(json, "picoEphemeralPublicKey" , encoded);
     Nonce * nonce;
     nonce = shared_get_pico_nonce(messagestart->shared);
     nonce_generate_random(nonce);
-    
     b64string = buffer_new(NONCE_DEFAULT_BYTES);
-    
-    
-    
     nonceBuffer = nonce_get_buffer(nonce);
     base64_encode_mem((char const *)nonce_get_buffer(nonce), nonce_get_length(nonce), b64string);
-    //base64_encode_string((char const *)nonceBuffer, b64string);
     json_add_buffer(json, "picoNonce", b64string);
     Nonce * sharedNonce;
     sharedNonce = nonce_new();

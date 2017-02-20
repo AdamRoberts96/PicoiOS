@@ -3182,6 +3182,7 @@
 		30A48B5F1E4FC92C0097E840 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
 		30A48B691E53779A0097E840 /* sigmaverifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaverifier.h; path = Scanner/pico/sigmaverifier.h; sourceTree = "<group>"; };
 		30A48B6A1E5377A00097E840 /* sigmaprover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaprover.h; path = Scanner/pico/sigmaprover.h; sourceTree = "<group>"; };
+		30A48B6D1E55D0210097E840 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -8014,6 +8015,7 @@
 		306810831E2AFB5400815743 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30A48B6D1E55D0210097E840 /* LocalAuthentication.framework */,
 				30A48B5F1E4FC92C0097E840 /* libz.1.tbd */,
 				3007FF651E4FC63D00777BBA /* libz.tbd */,
 				3040B8291E4AA146009A37A0 /* libz.1.dylib */,

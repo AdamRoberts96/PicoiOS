@@ -17,9 +17,11 @@
 #include "pico/log.h"
 #include "pico/users.h"
 #include "pico/sigmaprover.h"
+#include "pico/cryptosupport.h"
+#include "pico/json.h"
+#include <string.h>
 
-
-bool sigmaprover(RVPChannel * channel, Shared * shared) {
+bool sigmaprover(RVPChannel * channel, Shared * shared, const char * qrData) {
 	
     KeyPair * serviceEphemeralKey;
 	Buffer * buffer;
@@ -32,15 +34,26 @@ bool sigmaprover(RVPChannel * channel, Shared * shared) {
 	Buffer const * symmetricKey;
 	EC_KEY * picoIdentityPublicKey;
 	char messageStatus;
+    Json * qrJson;
+    
+    buffer = buffer_new(0);
+    
+    qrJson = json_new();
+    json_deserialize_string(qrJson, qrData, strlen(qrData));
+    
+    json_serialize_buffer(qrJson, buffer);
+    
+    
+    buffer_clear(buffer);
     
     messagestart = messagestart_new();
     messagestart_set(messagestart, shared);
-    buffer = buffer_new(0);
     messagestart_serialize(messagestart, buffer);
     channel_write_buffer(channel, buffer);
     buffer_clear(buffer);
     
     channel_read(channel, buffer);
+
     
     MessageServiceAuth * serviceauthmessage;
     

@@ -312,6 +312,15 @@ void shared_set_service_identity_public_key(Shared * shared, EC_KEY * serviceIde
 }
 
 /**
+ * Gets the Service's long term identity public key.
+ *
+ * @param shared The Shared object to store the details in
+ */
+EC_KEY * shared_get_service_identity_public_key(Shared * shared) {
+    return shared->serviceIdentityPublicKey;
+}
+
+/**
  * Returns the Pico's long term identity public key from the Shared object.
  *
  * @param shared The Shared object to get the details from
@@ -347,6 +356,10 @@ void shared_set_service_ephemeral_public_key(Shared * shared, EC_KEY * serviceEp
  */
 EC_KEY * shared_get_pico_ephemeral_public_key(Shared * shared) {
 	return shared->picoEphemeralPublicKey;
+}
+
+EC_KEY * shared_get_service_ephemeral_public_key(Shared * shared) {
+    return shared->serviceEphemeralPublicKey;
 }
 
 /**

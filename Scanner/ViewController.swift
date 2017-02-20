@@ -13,6 +13,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
+    var shared = shared_new();
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -59,7 +60,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         view.layer.addSublayer(previewLayer);
         
         captureSession.startRunning();
-        ecdh()
+        keypair_generate(shared_get_pico_identity_key(shared))
     }
     
     func failed() {
@@ -100,6 +101,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func found(code: String) {
         captureSession.stopRunning()
+        print(code)
         if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
             let codeJson = JSON(data: dataFromString)
             let codeType = codeJson["t"].stringValue
@@ -111,12 +113,14 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
             if (channel_open(channel)){
                 print("Channel opened")
             }
+            if (codeType == "KP"){
+                shared_set_service_identity_public_key(shared, cryptosupport_read_base64_string_public_key(codeJson["spk"].stringValue))
+            }
             //buffer_append_string(jbuff, "{\"picoEphemeralPublicKey\":\"A2+3D+9Aq/VQB8jdJ7+k1euTHX0iwas+mQ==\",\"picoNonce\":\"B64-NONCE\",\"picoVersion\":2}")
             //let unsafePointTest = ("" as NSString).utf8String
             //channel_write(channel, UnsafeMutablePointer(mutating: unsafePointTest), Int32(strlen(unsafePointTest)))
             //channel_write_buffer(channel, jbuff)
-            let shared = shared_new()
-            let success = sigmaprover(channel, shared)
+            let success = sigmaprover(channel, shared, code)
             let fullMessage = getType(codeType: codeType)
             let typeAlert = UIAlertController(title: "Code found", message: fullMessage, preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in

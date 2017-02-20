@@ -54,6 +54,9 @@ DLL_PUBLIC void shared_set_pico_ephemeral_public_key(Shared * shared, EC_KEY * p
 DLL_PUBLIC void shared_set_service_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey);
 DLL_PUBLIC EC_KEY * shared_get_pico_ephemeral_public_key(Shared * shared);
 
+DLL_PUBLIC EC_KEY * shared_get_service_identity_public_key(Shared * shared);
+DLL_PUBLIC EC_KEY * shared_get_service_ephemeral_public_key(Shared * shared);
+
 DLL_PUBLIC Buffer * shared_get_prover_enc_key(Shared * shared) ;
 DLL_PUBLIC Buffer * shared_get_verifier_enc_key(Shared * shared);
 DLL_PUBLIC Buffer * shared_get_prover_mac_key(Shared * shared);

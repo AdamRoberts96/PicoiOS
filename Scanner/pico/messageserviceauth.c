@@ -113,7 +113,7 @@ void messageserviceauth_get_bytes_to_sign(MessageServiceAuth * messageserviceaut
 	char writeInt[4];
 	Buffer * toAppend;
 	Nonce * picoNonce;
-	KeyPair * serviceEphemeralKey;
+	EC_KEY * serviceEphemeralPublicKey;
 
 	buffer_clear(buffer);
 
@@ -130,8 +130,8 @@ void messageserviceauth_get_bytes_to_sign(MessageServiceAuth * messageserviceaut
 	buffer_append(buffer, writeInt, 4);
 
 	toAppend = buffer_new(0);
-	serviceEphemeralKey = shared_get_service_ephemeral_key(messageserviceauth->shared);
-	keypair_getpublicder(serviceEphemeralKey, toAppend);
+    serviceEphemeralPublicKey =  shared_get_service_ephemeral_public_key(messageserviceauth->shared);
+	cryptosupport_getpublicder(serviceEphemeralPublicKey, toAppend);
 
 	buffer_append_buffer(buffer, toAppend);
 	buffer_delete(toAppend);
@@ -172,11 +172,10 @@ bool messageserviceauth_verify_signature(MessageServiceAuth * messageserviceauth
     
     messageserviceauth_get_bytes_to_sign(messageserviceauth, bufferin);
     
-    
-    serviceIdentityKey = shared_get_service_identity_key(messageserviceauth->shared);
-    serviceIdentityPublicKey = keypair_getpublickey(serviceIdentityKey);
-    //result = cryptosupport_verify_signature(serviceIdentityPublicKey, bufferin, sigin);
-    result = true;
+    serviceIdentityPublicKey = shared_get_service_identity_public_key(messageserviceauth->shared);
+    result = cryptosupport_verify_signature(serviceIdentityPublicKey, bufferin, sigin);
+    //result = true;
+
     
     buffer_delete(bufferin);
     return result;
@@ -301,7 +300,6 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
     json = json_new();
     result = json_deserialize_buffer(json, buffer);
     servicePublicKeyBytes = buffer_new(0);
-    
     if (result) {
         if (json_get_type(json, "sessionId") == JSONTYPE_DECIMAL) {
             messageserviceauth->sessionId = json_get_decimal(json, "sessionId");
@@ -311,7 +309,6 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
             result = false;
         }
     }
-    
     if (result) {
         value = json_get_string(json, "iv");
         if (value) {
@@ -322,7 +319,6 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
             result = false;
         }
     }
-    
     if (result) {
         value = json_get_string(json, "serviceEphemPublicKey");
         if (value) {
@@ -333,8 +329,6 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
             result = false;
         }
     }
-    
-    
     if (result) {
         value = json_get_string(json, "encryptedData");
         if (value) {
@@ -359,28 +353,24 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
             result = false;
         }
     }
-    
     shared_generate_shared_secrets_pico(messageserviceauth->shared);
-    
     cleartext = buffer_new(0);
     if (result) {
         vEncKey = shared_get_verifier_enc_key(messageserviceauth->shared);
         result = cryptosupport_decrypt(vEncKey, messageserviceauth->iv, messageserviceauth->encryptedData, cleartext);
     }
-    
     if (result) {
         start = 0;
         next = buffer_copy_lengthprepend(cleartext, start, servicePublicKeyBytes);
         if (next > start) {
             serviceIdentityPublicKey = cryptosupport_read_buffer_public_key(servicePublicKeyBytes);
-            shared_set_pico_identity_public_key(messageserviceauth->shared, serviceIdentityPublicKey);
+            shared_set_service_identity_public_key(messageserviceauth->shared, serviceIdentityPublicKey);
             start = next;
         }
         else {
             LOG(LOG_ERR, "Error deserializing decrypted length-prepended servicePublicKeyBytes data\n");
             result = false;
         }
-        
         next = buffer_copy_lengthprepend(cleartext, start, messageserviceauth->signature);
         if (next > start) {
             start = next;
@@ -389,7 +379,6 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
             LOG(LOG_ERR, "Error deserializing decrypted length-prepended signature data\n");
             result = false;
         }
-        
         next = buffer_copy_lengthprepend(cleartext, start, messageserviceauth->mac);
         if (next > start) {
             start = next;
@@ -400,22 +389,17 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
         }
     }
     buffer_delete(cleartext);
-    
     if (result) {
-        // Check the signature
         result = messageserviceauth_verify_signature(messageserviceauth, messageserviceauth->signature);
         if (!result) {
             LOG(LOG_ERR, "Invalid signature.\n");
         }
     }
-    
     if (result) {
-        // Check the mac
         mac = buffer_new(0);
-        vMacKey = shared_get_prover_mac_key(messageserviceauth->shared);
-        
+        vMacKey = shared_get_verifier_mac_key(messageserviceauth->shared);
         serviceIdentityPubEncoded = buffer_new(0);
-        serviceIdentityPublicKey = shared_get_pico_identity_public_key(messageserviceauth->shared);
+        serviceIdentityPublicKey = shared_get_service_identity_public_key(messageserviceauth->shared);
         cryptosupport_getpublicder(serviceIdentityPublicKey, serviceIdentityPubEncoded);
         cryptosupport_generate_mac(vMacKey, serviceIdentityPubEncoded, mac);
         buffer_delete(serviceIdentityPubEncoded);
@@ -426,10 +410,8 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
         }
         buffer_delete(mac);
     }
-    
     buffer_delete(servicePublicKeyBytes);
     json_delete(json);
-    
     return result;
 }
 

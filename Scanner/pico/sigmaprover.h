@@ -29,7 +29,7 @@
 
 // Function prototypes
 
-DLL_PUBLIC bool sigmaprover(RVPChannel * channel, Shared * shared);
+DLL_PUBLIC bool sigmaprover(RVPChannel * channel, Shared * shared, const char * qrData);
 
 // Function definitions
 
