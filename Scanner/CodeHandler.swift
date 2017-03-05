@@ -35,11 +35,16 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                         print(codeJson["spk"].stringValue)
                     }
                     output = sigmaprover(channel, shared, code)
-                    vController.displayMessage(title: "Code Found", body: "Authentication Succesful")
+                    if (output){
+                        vController.displayMessage(title: "Code Found", body: "Authentication Succesful")
+                    } else {
+                        vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Error communicating with Rendezvous Point")
+
+                    }
                 }
                 else {
                     print("Error received: %d", error!);
-                    vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful")
+                    vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Could not connect to TouchID")
 
                     output = false
                 }
