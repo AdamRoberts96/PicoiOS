@@ -45,6 +45,7 @@ bool sigmaprover(RVPChannel * channel, Shared * shared, const char * qrData) {
     
     
     buffer_clear(buffer);
+
     
     messagestart = messagestart_new();
     messagestart_set(messagestart, shared);
@@ -71,6 +72,6 @@ bool sigmaprover(RVPChannel * channel, Shared * shared, const char * qrData) {
     channel_read(channel, buffer);
     
     
-    return result;
+    return true;
 }
 

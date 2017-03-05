@@ -9,12 +9,14 @@
 import Foundation
 
 class KeyPair {
-    var publicKey: String = ""
-    var privateKey: String = ""
+    var publicKey: String
+    var privateKey: String
+
     
     init(pub: String, priv: String){
         self.publicKey = pub
         self.privateKey = priv
+
     }
     
     func getPublicKey() -> String {

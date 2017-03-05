@@ -236,7 +236,6 @@ bool keypair_import(KeyPair * keypair, char const * key_public, char const * key
 EVP_PKEY * keypair_load_private_key(char const * file) {
 	BIO * key = NULL;
 	EVP_PKEY * pkey = NULL;
-
     key = BIO_new_file(file, "rb");
 
 	if (key != NULL) {

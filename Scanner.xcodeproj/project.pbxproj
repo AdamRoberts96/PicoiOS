@@ -134,6 +134,8 @@
 		306810A41E2E504300815743 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306810A31E2E504300815743 /* DatabaseManager.swift */; };
 		3072BE0B1DE236880083899C /* VisualCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3072BE0A1DE236880083899C /* VisualCode.swift */; };
 		3072BE0E1DE237820083899C /* SignedVisualCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3072BE0D1DE237820083899C /* SignedVisualCode.swift */; };
+		3084C0D81E67A61700EF9A27 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30A48B6D1E55D0210097E840 /* LocalAuthentication.framework */; };
+		3084C0E61E67A70300EF9A27 /* CodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3084C0E51E67A70300EF9A27 /* CodeHandler.swift */; };
 		3098BEA81DE1DE64009C62D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */; };
 		3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3098BEA91DE1DE64009C62D4 /* ViewController.swift */; };
 		3098BEAD1DE1DE64009C62D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3098BEAB1DE1DE64009C62D4 /* Main.storyboard */; };
@@ -3166,6 +3168,7 @@
 		306810A31E2E504300815743 /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		3072BE0A1DE236880083899C /* VisualCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VisualCode.swift; path = ../VisualCode.swift; sourceTree = "<group>"; };
 		3072BE0D1DE237820083899C /* SignedVisualCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedVisualCode.swift; sourceTree = "<group>"; };
+		3084C0E51E67A70300EF9A27 /* CodeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeHandler.swift; sourceTree = "<group>"; };
 		3098BEA41DE1DE64009C62D4 /* Scanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3098BEA71DE1DE64009C62D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3098BEA91DE1DE64009C62D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -3190,6 +3193,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3084C0D81E67A61700EF9A27 /* LocalAuthentication.framework in Frameworks */,
 				30A48B681E4FD23C0097E840 /* libz.1.dylib in Frameworks */,
 				30A48B661E4FD1DD0097E840 /* libcurl.a in Frameworks */,
 				3007FF621E4D30E900777BBA /* libjre_emul.a in Frameworks */,
@@ -8037,6 +8041,7 @@
 		3068108F1E2E4DCF00815743 /* Database */ = {
 			isa = PBXGroup;
 			children = (
+				306810A31E2E504300815743 /* DatabaseManager.swift */,
 				306810911E2E4DEF00815743 /* FMDB.h */,
 				306810921E2E4DEF00815743 /* FMDatabase.h */,
 				306810931E2E4DEF00815743 /* FMDatabase.m */,
@@ -8049,7 +8054,6 @@
 				3068109A1E2E4DEF00815743 /* FMDatabasePool.h */,
 				3068109B1E2E4DEF00815743 /* FMDatabasePool.m */,
 				3068109C1E2E4DEF00815743 /* Info.plist */,
-				306810A31E2E504300815743 /* DatabaseManager.swift */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -8109,6 +8113,7 @@
 				3098BEB01DE1DE64009C62D4 /* LaunchScreen.storyboard */,
 				3098BEB31DE1DE64009C62D4 /* Info.plist */,
 				3023506A1E47694000CC9ED8 /* Crypto */,
+				3084C0E51E67A70300EF9A27 /* CodeHandler.swift */,
 			);
 			path = Scanner;
 			sourceTree = "<group>";
@@ -8411,6 +8416,7 @@
 				304292141E48CAA600E3DE78 /* $Gson$Preconditions.m in Sources */,
 				304292351E48CAA600E3DE78 /* JsonObject.m in Sources */,
 				304292431E48CAA600E3DE78 /* JsonToken.m in Sources */,
+				3084C0E61E67A70300EF9A27 /* CodeHandler.swift in Sources */,
 				3098BEAA1DE1DE64009C62D4 /* ViewController.swift in Sources */,
 				3042920C1E48CAA600E3DE78 /* DefaultDateTypeAdapter.m in Sources */,
 				3040B7F61E4A9189009A37A0 /* channel.c in Sources */,

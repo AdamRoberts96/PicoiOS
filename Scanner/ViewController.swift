@@ -1,4 +1,4 @@
-    //
+//
 //  ViewController.swift
 //  Scanner
 //
@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import LocalAuthentication
 
 class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
@@ -61,6 +62,23 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         
         captureSession.startRunning();
         keypair_generate(shared_get_pico_identity_key(shared))
+        let filemgr = FileManager.default
+        let dirPaths = filemgr.urls(for: .documentDirectory,
+                                    in: .userDomainMask)
+        var pubPath = dirPaths[0]
+        var privPath = dirPaths[0]
+        pubPath.appendPathComponent("pub")
+        pubPath.appendPathExtension("key")
+        privPath.appendPathComponent("priv")
+        privPath.appendPathExtension("key")
+        let pubPathString = pubPath.path
+        let privPathString = privPath.path
+        if (!(filemgr.fileExists(atPath: pubPathString)) && !(filemgr.fileExists(atPath: privPathString))){
+            keypair_export(shared_get_pico_identity_key(shared), pubPathString, privPathString)
+        }
+        keypair_import(shared_get_pico_identity_key(shared), pubPathString, privPathString)
+        databaseOnStart()
+        //storeData()
     }
     
     func failed() {
@@ -101,8 +119,27 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func found(code: String) {
         captureSession.stopRunning()
-        print(code)
+        /* print(code)
         if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
+            var context:LAContext = LAContext();
+            var error:NSError?
+            var success:Bool;
+            var reason:String = "Please authenticate using TouchID.";
+            
+            if (context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error))
+            {
+                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason, reply: { (success, error) -> Void in
+                    if (success) {
+                        print("Auth was OK");
+                    }
+                    else
+                    {
+                        //You should do better handling of error here but I'm being lazy
+                        print("Error received: %d", error!);
+                        return
+                    }
+                });
+            }
             let codeJson = JSON(data: dataFromString)
             let codeType = codeJson["t"].stringValue
             var address = codeJson["sa"].stringValue
@@ -114,22 +151,38 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 print("Channel opened")
             }
             if (codeType == "KP"){
-                shared_set_service_identity_public_key(shared, cryptosupport_read_base64_string_public_key(codeJson["spk"].stringValue))
+                print(codeJson["spk"].stringValue)
             }
-            //buffer_append_string(jbuff, "{\"picoEphemeralPublicKey\":\"A2+3D+9Aq/VQB8jdJ7+k1euTHX0iwas+mQ==\",\"picoNonce\":\"B64-NONCE\",\"picoVersion\":2}")
-            //let unsafePointTest = ("" as NSString).utf8String
-            //channel_write(channel, UnsafeMutablePointer(mutating: unsafePointTest), Int32(strlen(unsafePointTest)))
-            //channel_write_buffer(channel, jbuff)
-            let success = sigmaprover(channel, shared, code)
-            let fullMessage = getType(codeType: codeType)
-            let typeAlert = UIAlertController(title: "Code found", message: fullMessage, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
-                self.dismiss(animated: true)
-                self.captureSession.startRunning()
-            }
-            typeAlert.addAction(OKAction)
-            present(typeAlert, animated: true)
-        }   
+         success = sigmaprover(channel, shared, code) */
+        var picoSuccesful = false
+       
+        DispatchQueue.main.async {
+            picoSuccesful = handleCode(code: code, shared: self.shared!, vController: self)
+        }
+
+        
+        
+            //let picoSuccesful = handleCode(code: code, shared: shared!)
+            //let fullMessage = getType(codeType: codeType)
+       
+            var messageString:String
+        
+        if (picoSuccesful){
+            messageString = "Succesfully authenticated"
+        } else {
+            messageString = "Error authenticating with service"
+        }
+        captureSession.startRunning()
+    }
+    //}
+    
+    func displayMessage(title: String, body: String){
+        let typeAlert = UIAlertController(title: title, message: body, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
+            self.dismiss(animated: true)
+        }
+        typeAlert.addAction(OKAction)
+        present(typeAlert, animated: true)
     }
     
     func getType(codeType: String) -> String {

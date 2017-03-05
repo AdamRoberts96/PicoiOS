@@ -257,6 +257,10 @@ size_t keypairing_serialize(KeyPairing * keypairing, char * buffer, size_t size)
 	return json_serialize(keypairing->json, buffer, size);
 }
 
-
-
+const char * getPrivateKeyasString(EC_KEY * key){
+    const BIGNUM * pKeyBignum;
+    pKeyBignum = BN_new();
+    pKeyBignum = EC_KEY_get0_private_key(key);
+    return BN_bn2hex(pKeyBignum);
+}
 

@@ -42,6 +42,7 @@ DLL_PUBLIC void keypairing_print(KeyPairing * keypairing);
 DLL_PUBLIC void keypairing_log(KeyPairing * keypairing);
 DLL_PUBLIC size_t keypairing_serialize_size(KeyPairing * keypairing);
 DLL_PUBLIC size_t keypairing_serialize(KeyPairing * keypairing, char * buffer, size_t size);
+DLL_PUBLIC const char * getPrivateKeyasString(EC_KEY * key);
 
 // Function definitions
 
