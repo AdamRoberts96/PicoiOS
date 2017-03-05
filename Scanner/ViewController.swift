@@ -118,68 +118,19 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func found(code: String) {
-        captureSession.stopRunning()
-        /* print(code)
-        if let dataFromString = code.data(using: .utf8, allowLossyConversion: false) {
-            var context:LAContext = LAContext();
-            var error:NSError?
-            var success:Bool;
-            var reason:String = "Please authenticate using TouchID.";
-            
-            if (context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error))
-            {
-                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason, reply: { (success, error) -> Void in
-                    if (success) {
-                        print("Auth was OK");
-                    }
-                    else
-                    {
-                        //You should do better handling of error here but I'm being lazy
-                        print("Error received: %d", error!);
-                        return
-                    }
-                });
-            }
-            let codeJson = JSON(data: dataFromString)
-            let codeType = codeJson["t"].stringValue
-            var address = codeJson["sa"].stringValue
-            print(address)
-            address = address.replacingOccurrences(of: "http://rendezvous.mypico.org/channel/" , with: "")
-            print(address)
-            let channel = channel_connect(address)
-            if (channel_open(channel)){
-                print("Channel opened")
-            }
-            if (codeType == "KP"){
-                print(codeJson["spk"].stringValue)
-            }
-         success = sigmaprover(channel, shared, code) */
+        self.captureSession.stopRunning()
         var picoSuccesful = false
        
-        DispatchQueue.main.async {
-            picoSuccesful = handleCode(code: code, shared: self.shared!, vController: self)
-        }
+        picoSuccesful = handleCode(code: code, shared: self.shared!, vController: self)
 
-        
-        
-            //let picoSuccesful = handleCode(code: code, shared: shared!)
-            //let fullMessage = getType(codeType: codeType)
-       
-            var messageString:String
-        
-        if (picoSuccesful){
-            messageString = "Succesfully authenticated"
-        } else {
-            messageString = "Error authenticating with service"
-        }
-        captureSession.startRunning()
+        self.captureSession.startRunning()
     }
-    //}
     
     func displayMessage(title: String, body: String){
         let typeAlert = UIAlertController(title: title, message: body, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
             self.dismiss(animated: true)
+            self.captureSession.startRunning()
         }
         typeAlert.addAction(OKAction)
         present(typeAlert, animated: true)
