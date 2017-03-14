@@ -23,6 +23,8 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                 if (success) {
                     let codeJson = JSON(data: dataFromString)
                     let codeType = codeJson["t"].stringValue
+                    let extraData = codeJson["ed"].stringValue
+                    shared_set_extra_data(shared, extraData)
                     var address = codeJson["sa"].stringValue
                     print(address)
                     address = address.replacingOccurrences(of: "http://rendezvous.mypico.org/channel/" , with: "")

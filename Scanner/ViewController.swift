@@ -118,12 +118,10 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func found(code: String) {
-        self.captureSession.stopRunning()
         var picoSuccesful = false
        
         picoSuccesful = handleCode(code: code, shared: self.shared!, vController: self)
 
-        self.captureSession.startRunning()
     }
     
     func displayMessage(title: String, body: String){
@@ -131,6 +129,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
             self.dismiss(animated: true)
             self.captureSession.startRunning()
+       
         }
         typeAlert.addAction(OKAction)
         present(typeAlert, animated: true)

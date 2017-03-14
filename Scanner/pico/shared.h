@@ -52,6 +52,8 @@ DLL_PUBLIC void shared_set_service_identity_public_key(Shared * shared, EC_KEY *
 DLL_PUBLIC EC_KEY * shared_get_pico_identity_public_key(Shared * shared);
 DLL_PUBLIC void shared_set_pico_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey);
 DLL_PUBLIC void shared_set_service_ephemeral_public_key(Shared * shared, EC_KEY * picoEphemeralPublicKey);
+DLL_PUBLIC const char * shared_get_extra_data(Shared * shared);
+DLL_PUBLIC void shared_set_extra_data(Shared * shared, const char * ed);
 DLL_PUBLIC EC_KEY * shared_get_pico_ephemeral_public_key(Shared * shared);
 
 DLL_PUBLIC EC_KEY * shared_get_service_identity_public_key(Shared * shared);

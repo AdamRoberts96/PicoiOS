@@ -55,6 +55,7 @@ struct _Shared {
 	EC_KEY * picoEphemeralPublicKey;
     EC_KEY * serviceIdentityPublicKey;
     EC_KEY * serviceEphemeralPublicKey;
+    const char * extraData;
 };
 
 // Function prototypes
@@ -241,6 +242,14 @@ void shared_generate_shared_secrets_pico(Shared * shared) {
  */
 Nonce * shared_get_service_nonce(Shared * shared) {
 	return shared->serviceNonce;
+}
+
+void shared_set_extra_data(Shared * shared, const char * ed) {
+    shared->extraData = ed;;
+}
+
+const char * shared_get_extra_data(Shared * shared) {
+    return shared->extraData;
 }
 
 /**
