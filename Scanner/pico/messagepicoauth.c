@@ -34,6 +34,7 @@
 #include "pico/cryptosupport.h"
 #include "pico/log.h"
 #include "pico/messagepicoauth.h"
+#include <string.h>
 
 // Defines
 
@@ -371,13 +372,16 @@ void messagepicoauth_serialize(MessagePicoAuth * messagepicoauth, Buffer * buffe
     json_add_decimal(json, "sessionId", messagepicoauth->sessionId);
     toEncrypt = buffer_new(0);
     buffer_clear(encoded);
+    
     picoIdentityKey = shared_get_pico_identity_key(messagepicoauth->shared);
     keypair_getpublicder(picoIdentityKey, encoded);
     buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     buffer_clear(encoded);
+    
     messagepicoauth_generate_signature(messagepicoauth, encoded);
     buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     buffer_clear(encoded);
+    
     picoIdPubEncoded = buffer_new(0);
     keypair_getpublicder(picoIdentityKey, picoIdPubEncoded);
     pMacKey = shared_get_prover_mac_key(messagepicoauth->shared);
@@ -385,7 +389,12 @@ void messagepicoauth_serialize(MessagePicoAuth * messagepicoauth, Buffer * buffe
     buffer_delete(picoIdPubEncoded);
     buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     buffer_clear(encoded);
-    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
+    
+    const char * extraData = shared_get_extra_data(messagepicoauth->shared);
+    
+    buffer_append_lengthprepend(toEncrypt, extraData, strlen(extraData));
+    
+    //buffer_append_buffer_lengthprepend(toEncrypt, encoded); <- Inserts empty extraData field
     iv = buffer_new(CRYPTOSUPPORT_IV_SIZE);
     cryptosupport_generate_iv(iv);
     encrypted = buffer_new(0);

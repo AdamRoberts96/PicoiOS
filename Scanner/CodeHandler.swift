@@ -23,6 +23,8 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                 if (success) {
                     let codeJson = JSON(data: dataFromString)
                     let codeType = codeJson["t"].stringValue
+                    let extraData = codeJson["ed"].stringValue
+                    shared_set_extra_data(shared, extraData)
                     var address = codeJson["sa"].stringValue
                     print(address)
                     address = address.replacingOccurrences(of: "http://rendezvous.mypico.org/channel/" , with: "")
@@ -35,11 +37,16 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                         print(codeJson["spk"].stringValue)
                     }
                     output = sigmaprover(channel, shared, code)
-                    vController.displayMessage(title: "Code Found", body: "Authentication Succesful")
+                    if (output){
+                        vController.displayMessage(title: "Code Found", body: "Authentication Succesful")
+                    } else {
+                        vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Error communicating with Rendezvous Point")
+
+                    }
                 }
                 else {
                     print("Error received: %d", error!);
-                    vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful")
+                    vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Could not connect to TouchID")
 
                     output = false
                 }
