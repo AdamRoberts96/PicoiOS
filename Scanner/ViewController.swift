@@ -78,7 +78,20 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         }
         keypair_import(shared_get_pico_identity_key(shared), pubPathString, privPathString)
         databaseOnStart()
-        //storeData()
+        let pub = buffer_new(0);
+        let priv = buffer_new(0);
+        cryptosupport_getpublicpem(keypair_getpublickey(shared_get_pico_identity_key(shared)), pub)
+        cryptosupport_getprivatepem(keypair_getprivatekey(shared_get_pico_identity_key(shared)), priv)
+        let privstring = buffer_copy_to_new_string(priv)
+        let pubstring = buffer_copy_to_new_string(pub)
+        let pubNS = String.init(cString: pubstring!)
+        let privNS = String.init(cString: privstring!)
+        let storedKey = storeData(pubKey: pubNS, privKey: privNS)
+        shared_set_pico_identity_public_key(shared, keypair_new())
+        keypair_import_from_string(shared_get_pico_identity_key(shared), storedKey.getPublicKey(), storedKey.getPrivateKey())
+        print(inverseMod(k: BInt(4), p: BInt(number: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF".lowercased(), withBase: 16)))
+        let testCurve = Curve()
+        createKeyPairSwiftECC(curve: testCurve)
     }
     
     func failed() {

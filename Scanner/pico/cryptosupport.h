@@ -22,6 +22,7 @@
 #include <openssl/ec.h>
 #include "pico/buffer.h"
 #include "pico/dllpublic.h"
+#include "pico/keypair.h"
 
 // Defines
 
@@ -36,6 +37,10 @@
 
 DLL_PUBLIC void cryptosupport_getpublicpem(EC_KEY * eckey, Buffer * buffer);
 DLL_PUBLIC void cryptosupport_getpublicder(EC_KEY * eckey, Buffer * buffer);
+
+DLL_PUBLIC void cryptosupport_getprivatepem(EVP_PKEY * privkey, Buffer * buffer);
+DLL_PUBLIC void cryptosupport_getprivateder(EVP_PKEY * privkey, Buffer * buffer);
+
 DLL_PUBLIC bool cryptosupport_generate_mac(Buffer * macKey, Buffer * data, Buffer * bufferout);
 DLL_PUBLIC bool cryptosupport_verify_signature(EC_KEY * publickey, Buffer const * bufferin, Buffer * sigin);
 DLL_PUBLIC bool cryptosupport_encrypt(Buffer * key, Buffer * iv, Buffer * bufferin, Buffer * encryptedout);

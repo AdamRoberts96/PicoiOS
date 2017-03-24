@@ -27,6 +27,8 @@
 #include "pico/base64.h"
 #include "pico/log.h"
 #include "pico/cryptosupport.h"
+#include "pico/keypair.h"
+
 
 // Defines
 
@@ -71,6 +73,72 @@ void cryptosupport_getpublicpem(EC_KEY * eckey, Buffer * buffer) {
 	else {
 		LOG(LOG_ERR, "Error opening memory stream to output PEM public key\n");
 	}
+}
+
+void cryptosupport_getprivatepem(EVP_PKEY * privkey, Buffer * buffer) {
+    BIO * mem = NULL;
+    long size;
+    char * data;
+    int result;
+    PKCS8_PRIV_KEY_INFO * p8inf = NULL;
+    
+    p8inf = EVP_PKEY2PKCS8(privkey);
+    if (p8inf == NULL) {
+        LOG(LOG_ERR, "Error converting private key to PKCS\n");
+    }
+    
+    mem = BIO_new(BIO_s_mem());
+    if (mem != NULL) {
+        //if (outformat == FORMAT_ASN1)
+        result = i2d_PKCS8_PRIV_KEY_INFO_bio(mem, p8inf);
+
+        if (result == 0) {
+            LOG(LOG_ERR, "Error getting public key in PEM format\n");
+        }
+        
+        data = NULL;
+        size = BIO_get_mem_data(mem, & data);
+        
+        base64_encode_mem(data, size, buffer);
+        
+        BIO_free(mem);
+    }
+    else {
+        LOG(LOG_ERR, "Error opening memory stream to output PEM private key\n");
+    }
+}
+
+void cryptosupport_getprivateder(EVP_PKEY * privkey, Buffer * buffer) {
+    BIO * mem = NULL;
+    long size;
+    char * data;
+    int result;
+    PKCS8_PRIV_KEY_INFO * p8inf = NULL;
+    
+    p8inf = EVP_PKEY2PKCS8(privkey);
+    if (p8inf == NULL) {
+        LOG(LOG_ERR, "Error converting private key to PKCS\n");
+    }
+    
+    mem = BIO_new(BIO_s_mem());
+    if (mem != NULL) {
+        //if (outformat == FORMAT_ASN1)
+        result = i2d_PKCS8_PRIV_KEY_INFO_bio(mem, p8inf);
+        
+        if (result == 0) {
+            LOG(LOG_ERR, "Error getting private key in PEM format\n");
+        }
+        
+        data = NULL;
+        size = BIO_get_mem_data(mem, & data);
+        
+        buffer_append(buffer, data, size);
+
+        BIO_free(mem);
+    }
+    else {
+        LOG(LOG_ERR, "Error opening memory stream to output PEM private key\n");
+    }
 }
 
 /**

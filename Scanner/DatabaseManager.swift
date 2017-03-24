@@ -27,14 +27,13 @@ func databaseOnStart() {
         }
         
         if (databaseConnection?.open())! {
-            let createPairingTableStatement = "CREATE TABLE KEYPAIRS(KEY TEXT)"
+            let createPairingTableStatement = "CREATE TABLE KEYPAIRS(PUB TEXT, PRIV TEXT)"
             if !(databaseConnection?.executeStatements(createPairingTableStatement))! {
                 print("Error: \(databaseConnection?.lastErrorMessage())")
             }
-            let sql_stmt = "CREATE TABLE KEYTEST(KEY TEXT)"
-            if !(databaseConnection?.executeStatements(sql_stmt))! {
-                print("Error: \(databaseConnection?.lastErrorMessage())")
-            }
+            
+            
+            
             databaseConnection?.close()
         } else {
             print("Error: \(databaseConnection?.lastErrorMessage())")
@@ -42,7 +41,10 @@ func databaseOnStart() {
     }
 }
 
-func storeData(key:String){
+    func storeData(pubKey:String, privKey:String) ->KeyPair{
+        
+    var output: KeyPair? = nil
+    
     var databasePath = String();
     
     let filemgr = FileManager.default
@@ -54,27 +56,30 @@ func storeData(key:String){
     if filemgr.fileExists(atPath: databasePath as String) {
             
         let databaseConnection = FMDatabase(path: databasePath as String)
-            
+        
         if databaseConnection == nil {
             print("Error: \(databaseConnection?.lastErrorMessage())")
         }
             
         if (databaseConnection?.open())! {
-            let addQuery = "INSERT INTO KEYTEST (KEY) VALUES ('test'), ('test2')"
-            let addSuccessful = databaseConnection?.executeUpdate(addQuery, withArgumentsIn: nil)
+            //let paramArray: NSArray = [pubKey, privKey]
+            let addQuery = "INSERT INTO KEYPAIRS (PUB, PRIV) VALUES (?, ?) "
+            let addSuccessful = databaseConnection?.executeUpdate(addQuery, withArgumentsIn: [pubKey, privKey])
             if !addSuccessful! {
                 print("insert failed: \(databaseConnection?.lastErrorMessage())")
             }
             print(databaseConnection?.lastErrorMessage())
             
-            let testSelectQuery = "SELECT * FROM KEYTEST"
+            let testSelectQuery = "SELECT * FROM KEYPAIRS"
             let resultSet: FMResultSet? = databaseConnection?.executeQuery(testSelectQuery, withArgumentsIn: nil)
-            var result: Int32 = 1
-            result = (resultSet?.columnIndex(forName: "KEY"))!
+            let resultPub = (resultSet?.columnIndex(forName: "PUB"))!
+            let resultPriv = (resultSet?.columnIndex(forName: "PRIV"))!
             print(databaseConnection?.lastErrorMessage())
             let count = resultSet?.columnCount()
             while(resultSet?.next())!{
+                output = KeyPair(pub: (resultSet?.string(forColumnIndex: 0))!, priv: (resultSet?.string(forColumnIndex: 1))!)
                 print(resultSet?.string(forColumnIndex: 0))
+                print(resultSet?.string(forColumnIndex: 1))
             }
             let out = resultSet?.object(forColumnIndex: 0)
             print(databaseConnection?.lastErrorMessage())
@@ -85,5 +90,6 @@ func storeData(key:String){
             print("Error: \(databaseConnection?.lastErrorMessage())")
         }
     }
+        return output!;
 }
 

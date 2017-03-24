@@ -6,7 +6,7 @@
 //  Copyright © 2017 Adam Roberts. All rights reserved.
 //
 
-import Foundation
+/* import Foundation
 
 let vKeyPair = KeyPair(pub: "A2+3D+9Aq/VQB8jdJ7+k1euTHX0iwas+mQ==", priv: "gdSNzDu7PRdeX2+/Qh0toFtjc7Y9jlZS");
 
@@ -44,5 +44,5 @@ func ecdh() -> () {
         
     }
     
-    
-}
+ 
+} */

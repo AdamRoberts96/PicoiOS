@@ -36,10 +36,16 @@ DLL_PUBLIC void keypair_delete(KeyPair * keypair);
 DLL_PUBLIC void keypair_generate(KeyPair * keypair);
 DLL_PUBLIC void keypair_export(KeyPair * keypair, char const * key_public, char const * key_private);
 DLL_PUBLIC bool keypair_import(KeyPair * keypair, char const * key_public, char const * key_private);
+
+DLL_PUBLIC bool keypair_import_from_string(KeyPair * keypair, char const * key_public, char const * key_private);
+
 DLL_PUBLIC void keypair_clear_keys(KeyPair * keypair);
 
 DLL_PUBLIC void keypair_getpublicpem(KeyPair * keypair, Buffer * buffer);
 DLL_PUBLIC void keypair_getpublicder(KeyPair * keypair, Buffer * buffer);
+
+DLL_PUBLIC void keypair_getprivatepem(KeyPair * keypair, Buffer * buffer);
+DLL_PUBLIC void keypair_getprivateder(KeyPair * keypair, Buffer * buffer);
 
 DLL_PUBLIC EC_KEY * keypair_getpublickey(KeyPair * keypair);
 DLL_PUBLIC EVP_PKEY * keypair_getprivatekey(KeyPair * keypair);

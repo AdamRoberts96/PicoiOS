@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3007FF621E4D30E900777BBA /* libjre_emul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3007FF5B1E4D30DA00777BBA /* libjre_emul.a */; };
 		3007FF641E4FA37F00777BBA /* sigmaprover.c in Sources */ = {isa = PBXBuildFile; fileRef = 3007FF631E4FA37F00777BBA /* sigmaprover.c */; };
+		3009ECCB1E8484D300B3DA55 /* SwiftECC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3009ECCA1E8484D300B3DA55 /* SwiftECC.swift */; };
 		3010A7981DE1E72C00DD6536 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */; };
 		302350541E4760A900CC9ED8 /* GMEllipticCurveCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 302350511E4760A900CC9ED8 /* GMEllipticCurveCrypto.m */; };
 		302350551E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m in Sources */ = {isa = PBXBuildFile; fileRef = 302350531E4760A900CC9ED8 /* GMEllipticCurveCrypto+hash.m */; };
@@ -146,6 +147,11 @@
 		30A48B5E1E4FC90D0097E840 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3040B8271E4AA126009A37A0 /* Security.framework */; };
 		30A48B661E4FD1DD0097E840 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3040B8251E4AA0DC009A37A0 /* libcurl.a */; };
 		30A48B681E4FD23C0097E840 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3040B8291E4AA146009A37A0 /* libz.1.dylib */; };
+		30CBAB221E848A9900B7EB45 /* MG Basic Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CBAB1D1E848A9900B7EB45 /* MG Basic Math.swift */; };
+		30CBAB231E848A9900B7EB45 /* MG Benchmark Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CBAB1E1E848A9900B7EB45 /* MG Benchmark Tools.swift */; };
+		30CBAB241E848A9900B7EB45 /* SMP Bignum Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CBAB1F1E848A9900B7EB45 /* SMP Bignum Extensions.swift */; };
+		30CBAB251E848A9900B7EB45 /* SMP Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CBAB201E848A9900B7EB45 /* SMP Core.swift */; };
+		30CBAB261E848A9900B7EB45 /* SMP String Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CBAB211E848A9900B7EB45 /* SMP String Module.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -274,6 +280,7 @@
 		3007FF521E4D30D900777BBA /* JreEmulation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JreEmulation.xcodeproj; path = "../../Downloads/j2objc-master-2/jre_emul/JreEmulation.xcodeproj"; sourceTree = "<group>"; };
 		3007FF631E4FA37F00777BBA /* sigmaprover.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sigmaprover.c; path = Scanner/pico/sigmaprover.c; sourceTree = "<group>"; };
 		3007FF651E4FC63D00777BBA /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		3009ECCA1E8484D300B3DA55 /* SwiftECC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftECC.swift; path = ../SwiftECC.swift; sourceTree = "<group>"; };
 		3010A7971DE1E72C00DD6536 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		302350501E4760A900CC9ED8 /* GMEllipticCurveCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GMEllipticCurveCrypto.h; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto.h"; sourceTree = "<group>"; };
 		302350511E4760A900CC9ED8 /* GMEllipticCurveCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GMEllipticCurveCrypto.m; path = "../../Downloads/GMEllipticCurveCrypto-master/GMEllipticCurveCrypto.m"; sourceTree = "<group>"; };
@@ -3186,6 +3193,11 @@
 		30A48B691E53779A0097E840 /* sigmaverifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaverifier.h; path = Scanner/pico/sigmaverifier.h; sourceTree = "<group>"; };
 		30A48B6A1E5377A00097E840 /* sigmaprover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sigmaprover.h; path = Scanner/pico/sigmaprover.h; sourceTree = "<group>"; };
 		30A48B6D1E55D0210097E840 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		30CBAB1D1E848A9900B7EB45 /* MG Basic Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MG Basic Math.swift"; path = "../../../Downloads/Swift-Big-Integer-master/Sources/MG Basic Math.swift"; sourceTree = "<group>"; };
+		30CBAB1E1E848A9900B7EB45 /* MG Benchmark Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MG Benchmark Tools.swift"; path = "../../../Downloads/Swift-Big-Integer-master/Sources/MG Benchmark Tools.swift"; sourceTree = "<group>"; };
+		30CBAB1F1E848A9900B7EB45 /* SMP Bignum Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SMP Bignum Extensions.swift"; path = "../../../Downloads/Swift-Big-Integer-master/Sources/SMP Bignum Extensions.swift"; sourceTree = "<group>"; };
+		30CBAB201E848A9900B7EB45 /* SMP Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SMP Core.swift"; path = "../../../Downloads/Swift-Big-Integer-master/Sources/SMP Core.swift"; sourceTree = "<group>"; };
+		30CBAB211E848A9900B7EB45 /* SMP String Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SMP String Module.swift"; path = "../../../Downloads/Swift-Big-Integer-master/Sources/SMP String Module.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -8096,6 +8108,8 @@
 		3098BEA61DE1DE64009C62D4 /* Scanner */ = {
 			isa = PBXGroup;
 			children = (
+				3009ECCA1E8484D300B3DA55 /* SwiftECC.swift */,
+				30CBAB341E848AA700B7EB45 /* Bignum */,
 				3040B7141E4A7ECB009A37A0 /* openssl */,
 				304291771E48CAA600E3DE78 /* com */,
 				304290A41E48C99800E3DE78 /* Rendezvous */,
@@ -8134,6 +8148,18 @@
 				3098BEC91DE1DE65009C62D4 /* Info.plist */,
 			);
 			path = ScannerUITests;
+			sourceTree = "<group>";
+		};
+		30CBAB341E848AA700B7EB45 /* Bignum */ = {
+			isa = PBXGroup;
+			children = (
+				30CBAB1D1E848A9900B7EB45 /* MG Basic Math.swift */,
+				30CBAB1E1E848A9900B7EB45 /* MG Benchmark Tools.swift */,
+				30CBAB1F1E848A9900B7EB45 /* SMP Bignum Extensions.swift */,
+				30CBAB201E848A9900B7EB45 /* SMP Core.swift */,
+				30CBAB211E848A9900B7EB45 /* SMP String Module.swift */,
+			);
+			name = Bignum;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -8371,6 +8397,7 @@
 				3042920D1E48CAA600E3DE78 /* ExclusionStrategy.m in Sources */,
 				3040B7F71E4A9189009A37A0 /* continuous.c in Sources */,
 				304292361E48CAA600E3DE78 /* JsonParseException.m in Sources */,
+				30CBAB241E848A9900B7EB45 /* SMP Bignum Extensions.swift in Sources */,
 				302350601E4763D100CC9ED8 /* SigmaProver.swift in Sources */,
 				304292371E48CAA600E3DE78 /* JsonParser.m in Sources */,
 				3040B8071E4A9189009A37A0 /* messagestart.c in Sources */,
@@ -8410,6 +8437,7 @@
 				3042923E1E48CAA600E3DE78 /* package-info.m in Sources */,
 				3040B80C1E4A9189009A37A0 /* shared.c in Sources */,
 				304292231E48CAA600E3DE78 /* ISO8601Utils.m in Sources */,
+				30CBAB221E848A9900B7EB45 /* MG Basic Math.swift in Sources */,
 				304292251E48CAA600E3DE78 /* Excluder.m in Sources */,
 				3040B8031E4A9189009A37A0 /* messagepicoauth.c in Sources */,
 				3040B8001E4A9189009A37A0 /* keypairing.c in Sources */,
@@ -8423,6 +8451,7 @@
 				304292321E48CAA600E3DE78 /* JsonElement.m in Sources */,
 				3042922C1E48CAA600E3DE78 /* Primitives.m in Sources */,
 				304292461E48CAA600E3DE78 /* TreeTypeAdapter.m in Sources */,
+				30CBAB251E848A9900B7EB45 /* SMP Core.swift in Sources */,
 				3042922B1E48CAA600E3DE78 /* package-info.m in Sources */,
 				3040B7F31E4A9189009A37A0 /* buffer.c in Sources */,
 				304290A21E48C99000E3DE78 /* RendezvousOutputStream.m in Sources */,
@@ -8435,6 +8464,8 @@
 				302350541E4760A900CC9ED8 /* GMEllipticCurveCrypto.m in Sources */,
 				304292181E48CAA600E3DE78 /* DateTypeAdapter.m in Sources */,
 				304292081E48CAA600E3DE78 /* package-info.m in Sources */,
+				30CBAB231E848A9900B7EB45 /* MG Benchmark Tools.swift in Sources */,
+				30CBAB261E848A9900B7EB45 /* SMP String Module.swift in Sources */,
 				3040B80F1E4A9189009A37A0 /* users.c in Sources */,
 				3042923A1E48CAA600E3DE78 /* JsonSerializer.m in Sources */,
 				3042923F1E48CAA600E3DE78 /* package-info.m in Sources */,
@@ -8464,6 +8495,7 @@
 				302350691E47693A00CC9ED8 /* KeyPair.swift in Sources */,
 				3068109F1E2E4DEF00815743 /* FMDatabaseQueue.m in Sources */,
 				3040B8051E4A9189009A37A0 /* messageserviceauth.c in Sources */,
+				3009ECCB1E8484D300B3DA55 /* SwiftECC.swift in Sources */,
 				306810A01E2E4DEF00815743 /* FMDatabaseAdditions.m in Sources */,
 				3042921D1E48CAA600E3DE78 /* ObjectTypeAdapter.m in Sources */,
 				304292151E48CAA600E3DE78 /* $Gson$Types.m in Sources */,

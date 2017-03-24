@@ -30,6 +30,8 @@
 #include "pico/cryptosupport.h"
 #include "pico/log.h"
 #include "pico/keypair.h"
+#include <string.h>
+
 
 // Defines
 
@@ -227,6 +229,7 @@ bool keypair_import(KeyPair * keypair, char const * key_public, char const * key
 	return result;
 }
 
+
 /**
  * Load a private key, stored in DER format, in from file.
  *
@@ -252,6 +255,74 @@ EVP_PKEY * keypair_load_private_key(char const * file) {
 	}
 
 	return (pkey);
+}
+
+EVP_PKEY * keypair_load_private_key_from_string(char const * string) {
+    BIO * key = NULL;
+    EVP_PKEY * pkey = NULL;
+    key = BIO_new(BIO_s_mem());
+    
+    Buffer * derKey = buffer_new(base64_decode_size_max(strlen(string)));
+    
+    base64_decode_string(string, derKey);
+    
+    BIO_write(key, buffer_get_buffer(derKey), buffer_get_size(derKey));
+    
+    if (key != NULL) {
+        pkey = d2i_PrivateKey_bio(key, NULL);
+        BIO_free(key);
+        if (pkey == NULL) {
+            LOG(LOG_ERR, "Error reading private key\n");
+        }
+    }
+    else {
+        LOG(LOG_ERR, "Error opening private key \n");
+    }
+    
+    return (pkey);
+}
+
+EC_KEY * keypair_load_public_key_from_string(char const * string) {
+    BIO * key = NULL;
+    EC_KEY * eckey = NULL;
+    
+    key = BIO_new(BIO_s_mem());
+    
+    Buffer * derKey = buffer_new(base64_decode_size_max(strlen(string)));
+    
+    base64_decode_string(string, derKey);
+    
+    BIO_write(key, buffer_get_buffer(derKey), buffer_get_size(derKey));
+    
+    if (key != NULL) {
+        eckey = d2i_EC_PUBKEY_bio(key, NULL);
+        BIO_free(key);
+        if (eckey == NULL) {
+            LOG(LOG_ERR, "Error reading public key\n");
+        }
+    }
+    else {
+        LOG(LOG_ERR, "Error opening public key\n");
+    }
+    
+    return (eckey);
+}
+
+bool keypair_import_from_string(KeyPair * keypair, char const * key_public, char const * key_private) {
+    bool result;
+    
+    keypair_clear_keys(keypair);
+    
+    keypair->pkey = keypair_load_private_key_from_string(key_private);
+    keypair->eckey = keypair_load_public_key_from_string(key_public);
+    
+    result = (keypair->pkey != NULL) && (keypair->eckey != NULL);
+    
+    if (result == false) {
+        keypair_clear_keys(keypair);
+    }
+    
+    return result;
 }
 
 /**
@@ -300,6 +371,15 @@ void keypair_getpublicpem(KeyPair * keypair, Buffer * buffer) {
 	cryptosupport_getpublicpem(keypair->eckey, buffer);
 }
 
+void keypair_getprivatepem(KeyPair * keypair, Buffer * buffer) {
+    cryptosupport_getprivatepem(keypair->pkey, buffer);
+}
+
+void keypair_getprivateder(KeyPair * keypair, Buffer * buffer) {
+    cryptosupport_getprivateder(keypair->pkey, buffer);
+}
+
+
 /**
  * Extract the OpenSSL format public key.
  *
@@ -337,6 +417,7 @@ void keypair_sign_data(KeyPair * keypair, Buffer const * bufferin, Buffer * buff
 	EVP_MD_CTX * mdctx = NULL;
 	size_t length;
 	int result;
+    
 
 	buffer_clear(bufferout);
 	buffer_set_min_size(bufferout, EVP_MAX_MD_SIZE);
