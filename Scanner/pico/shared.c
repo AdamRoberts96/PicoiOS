@@ -29,6 +29,7 @@
 #include "pico/keyagreement.h"
 #include "pico/log.h"
 #include "pico/shared.h"
+#include "pico/base64.h"
 
 // Defines
 
@@ -215,6 +216,15 @@ void shared_generate_shared_secrets_pico(Shared * shared) {
     pEphemPriv = keypair_getprivatekey(shared->picoEphemeralKey);
     
     keyagreement_generate_secret(pEphemPriv, shared->serviceEphemeralPublicKey, sharedSecret);
+    
+    Buffer * encoded;
+    encoded = buffer_new(0);
+    
+    base64_encode_buffer(sharedSecret, encoded);
+    printf("\n");
+    printf("Secret:");
+    printf(buffer_copy_to_new_string(encoded));
+    printf("\n");
     
     // Generate key data
     sigmakeyderiv = sigmakeyderiv_new();

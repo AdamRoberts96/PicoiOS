@@ -1,14 +1,6 @@
 //This bridging header exposes Objective-C libraries to swift
 #import "FMDB.h"
 #import "GMEllipticCurveCrypto+hash.h"
-#import "./com/google/gson/Gson.h"
-#import "RendezvousChannel.h"
-#import "RendezvousClient.h"
-#import "RendezvousInputStream.h"
-#import "RendezvousOutputStream.h"
-#import "InterruptibleStream.h"
-#import "StatusResponse.h"
-#import "./java/net/URL.h"
 #import "openssl/hmac.h"
 #import "sigmaverifier.h"
 #import "nonce.h"
@@ -20,3 +12,5 @@
 #import "keypair.h"
 #import "sigmaprover.h"
 #import "cryptosupport.h"
+#import "keypair.h"
+#import <CommonCrypto/CommonDigest.h>

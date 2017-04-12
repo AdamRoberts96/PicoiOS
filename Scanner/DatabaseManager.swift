@@ -16,7 +16,7 @@ func databaseOnStart() {
     let dirPaths = filemgr.urls(for: .documentDirectory,
                                 in: .userDomainMask)
     
-    databasePath = dirPaths[0].appendingPathComponent("test.db").path
+    databasePath = dirPaths[0].appendingPathComponent("keys.db").path
     
     if !filemgr.fileExists(atPath: databasePath as String) {
         
@@ -27,7 +27,7 @@ func databaseOnStart() {
         }
         
         if (databaseConnection?.open())! {
-            let createPairingTableStatement = "CREATE TABLE KEYPAIRS(PUB TEXT, PRIV TEXT)"
+            let createPairingTableStatement = "CREATE TABLE KEYPAIRS(PICOPUB TEXT, PICOPRIV TEXT, SERVICECOMMIT TEXT, EXTRADATA TEXT)"
             if !(databaseConnection?.executeStatements(createPairingTableStatement))! {
                 print("Error: \(databaseConnection?.lastErrorMessage())")
             }
@@ -41,17 +41,15 @@ func databaseOnStart() {
     }
 }
 
-    func storeData(pubKey:String, privKey:String) ->KeyPair{
+    func storeData(picoPubKey:String, picoPrivKey:String, serviceCommit: String, extraData: String) ->(){
         
-    var output: KeyPair? = nil
-    
     var databasePath = String();
     
     let filemgr = FileManager.default
     let dirPaths = filemgr.urls(for: .documentDirectory,
                                     in: .userDomainMask)
         
-    databasePath = dirPaths[0].appendingPathComponent("test.db").path
+    databasePath = dirPaths[0].appendingPathComponent("keys.db").path
     
     if filemgr.fileExists(atPath: databasePath as String) {
             
@@ -63,33 +61,62 @@ func databaseOnStart() {
             
         if (databaseConnection?.open())! {
             //let paramArray: NSArray = [pubKey, privKey]
-            let addQuery = "INSERT INTO KEYPAIRS (PUB, PRIV) VALUES (?, ?) "
-            let addSuccessful = databaseConnection?.executeUpdate(addQuery, withArgumentsIn: [pubKey, privKey])
+            let addQuery = "INSERT INTO KEYPAIRS (PICOPUB, PICOPRIV, SERVICECOMMIT, EXTRADATA) VALUES (?, ?, ?, ?) "
+            let addSuccessful = databaseConnection?.executeUpdate(addQuery, withArgumentsIn: [picoPubKey, picoPrivKey, serviceCommit, extraData])
             if !addSuccessful! {
                 print("insert failed: \(databaseConnection?.lastErrorMessage())")
             }
             print(databaseConnection?.lastErrorMessage())
-            
-            let testSelectQuery = "SELECT * FROM KEYPAIRS"
-            let resultSet: FMResultSet? = databaseConnection?.executeQuery(testSelectQuery, withArgumentsIn: nil)
-            let resultPub = (resultSet?.columnIndex(forName: "PUB"))!
-            let resultPriv = (resultSet?.columnIndex(forName: "PRIV"))!
-            print(databaseConnection?.lastErrorMessage())
-            let count = resultSet?.columnCount()
-            while(resultSet?.next())!{
-                output = KeyPair(pub: (resultSet?.string(forColumnIndex: 0))!, priv: (resultSet?.string(forColumnIndex: 1))!)
-                print(resultSet?.string(forColumnIndex: 0))
-                print(resultSet?.string(forColumnIndex: 1))
-            }
-            let out = resultSet?.object(forColumnIndex: 0)
-            print(databaseConnection?.lastErrorMessage())
-            print(out)
+
             
             databaseConnection?.close()
         } else {
             print("Error: \(databaseConnection?.lastErrorMessage())")
         }
     }
-        return output!;
 }
 
+    func getPairingInfo(commit: String) -> KeyPair{
+        var keyPairs = [KeyPair]()
+        
+        var databasePath = String();
+        
+        let filemgr = FileManager.default
+        let dirPaths = filemgr.urls(for: .documentDirectory,
+                                    in: .userDomainMask)
+        
+        databasePath = dirPaths[0].appendingPathComponent("keys.db").path
+        
+        if filemgr.fileExists(atPath: databasePath as String) {
+            
+            let databaseConnection = FMDatabase(path: databasePath as String)
+            
+            if databaseConnection == nil {
+                print("Error: \(databaseConnection?.lastErrorMessage())")
+            }
+            
+            if (databaseConnection?.open())! {
+                let selectQuery = "SELECT * FROM KEYPAIRS WHERE SERVICECOMMIT = ?"
+                let resultSet: FMResultSet? = databaseConnection?.executeQuery(selectQuery, withArgumentsIn: [commit])
+                while(resultSet?.next())!{
+                    let tempPair = KeyPair(pub: (resultSet?.string(forColumnIndex: 0))!, priv: (resultSet?.string(forColumnIndex: 1))!,
+                                           commit: (resultSet?.string(forColumnIndex: 2))!, extraData: (resultSet?.string(forColumnIndex: 3))!)
+                    keyPairs.append(tempPair)
+                }
+            }
+        }
+        
+        if (keyPairs.count >= 1){
+            return keyPairs[0]
+        }
+        
+        else{
+            return KeyPair(pub: "", priv: "", commit: "", extraData: "")
+        }
+        
+    }
+    
+    func storeData(keypair: KeyPair){
+        storeData(picoPubKey: keypair.getPublicKey(), picoPrivKey: keypair.getPrivateKey(),
+                  serviceCommit: keypair.getCommit(), extraData: keypair.getExtraData())
+    }

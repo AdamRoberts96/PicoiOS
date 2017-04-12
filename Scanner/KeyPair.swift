@@ -9,22 +9,34 @@
 import Foundation
 
 class KeyPair {
-    var publicKey: String
-    var privateKey: String
+    let picoPublicKey: String
+    let picoPrivateKey: String
+    let serviceCommit: String
+    let extraData: String
 
     
-    init(pub: String, priv: String){
-        self.publicKey = pub
-        self.privateKey = priv
+    init(pub: String, priv: String, commit: String, extraData: String){
+        self.picoPublicKey = pub
+        self.picoPrivateKey = priv
+        self.serviceCommit = commit
+        self.extraData = extraData
 
     }
     
     func getPublicKey() -> String {
-        return publicKey
+        return picoPublicKey
     }
     
     func getPrivateKey() -> String {
-        return privateKey
+        return picoPrivateKey
+    }
+    
+    func getCommit() -> String {
+        return serviceCommit
+    }
+    
+    func getExtraData() -> String{
+        return extraData
     }
     
 }

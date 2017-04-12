@@ -172,6 +172,17 @@ bool messagestart_serialize(MessageStart * messagestart, Buffer * buffer){
     encoded = buffer_new(0);
     shared_set_pico_ephemeral_public_key(messagestart->shared, keypair_getpublickey(keypair));
     keypair_getpublicpem(keypair, encoded);
+    
+    //DEBUG
+    printf("\n Pico Public key");
+    printf(buffer_copy_to_new_string(encoded));
+    Buffer * testBuff;
+    testBuff = buffer_new(0);
+    keypair_getprivatepem(keypair, testBuff);
+    printf("\n Pico Private key");
+    printf(buffer_copy_to_new_string(testBuff));
+    
+    
     json_add_buffer(json, "picoEphemeralPublicKey" , encoded);
     Nonce * nonce;
     nonce = shared_get_pico_nonce(messagestart->shared);

@@ -323,6 +323,10 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
         value = json_get_string(json, "serviceEphemPublicKey");
         if (value) {
             shared_set_service_ephemeral_public_key(messageserviceauth->shared, cryptosupport_read_base64_string_public_key(value));
+            
+            printf("\n Service ephemeral key");
+            printf(value);
+            
         }
         else {
             LOG(LOG_ERR, "Missing serviceEphemPublicKey\n");

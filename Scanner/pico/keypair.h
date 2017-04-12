@@ -39,6 +39,9 @@ DLL_PUBLIC bool keypair_import(KeyPair * keypair, char const * key_public, char 
 
 DLL_PUBLIC bool keypair_import_from_string(KeyPair * keypair, char const * key_public, char const * key_private);
 
+DLL_PUBLIC EC_KEY * keypair_load_public_key_from_string(char const * string);
+DLL_PUBLIC EVP_PKEY * keypair_load_private_key_from_string(char const * string);
+
 DLL_PUBLIC void keypair_clear_keys(KeyPair * keypair);
 
 DLL_PUBLIC void keypair_getpublicpem(KeyPair * keypair, Buffer * buffer);
