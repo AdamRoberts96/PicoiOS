@@ -365,7 +365,7 @@ bool messageserviceauth_deserialize(MessageServiceAuth * messageserviceauth, Buf
     }
     if (result) {
         start = 0;
-        next = buffer_copy_lengthprepend(cleartext, start, servicePublicKeyBytes);
+        next =  (cleartext, start, servicePublicKeyBytes);
         if (next > start) {
             serviceIdentityPublicKey = cryptosupport_read_buffer_public_key(servicePublicKeyBytes);
             shared_set_service_identity_public_key(messageserviceauth->shared, serviceIdentityPublicKey);

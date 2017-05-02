@@ -390,9 +390,8 @@ void messagepicoauth_serialize(MessagePicoAuth * messagepicoauth, Buffer * buffe
     buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     buffer_clear(encoded);
     
-    const char * extraData = shared_get_extra_data(messagepicoauth->shared);
-    printf(extraData);
-    buffer_append(encoded, extraData, strlen(extraData));
+    encoded = shared_get_extradata_buffer(messagepicoauth->shared);
+    buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     
     buffer_append_buffer_lengthprepend(toEncrypt, encoded);
     iv = buffer_new(CRYPTOSUPPORT_IV_SIZE);

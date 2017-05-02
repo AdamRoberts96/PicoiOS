@@ -56,7 +56,7 @@ struct _Shared {
 	EC_KEY * picoEphemeralPublicKey;
     EC_KEY * serviceIdentityPublicKey;
     EC_KEY * serviceEphemeralPublicKey;
-    const char * extraData;
+    Buffer * extraData;
 };
 
 // Function prototypes
@@ -95,6 +95,8 @@ Shared * shared_new() {
 	shared->picoEphemeralPublicKey = NULL;
     shared->serviceIdentityPublicKey = NULL;
     shared->serviceEphemeralPublicKey = NULL;
+    
+    shared->extraData = buffer_new(0);
 
 	return shared;
 }
@@ -223,7 +225,7 @@ void shared_generate_shared_secrets_pico(Shared * shared) {
     base64_encode_buffer(sharedSecret, encoded);
     printf("\n");
     printf("Secret:");
-    printf(buffer_copy_to_new_string(encoded));
+    printf(buffer_copy_to_new_string(sharedSecret));
     printf("\n");
     
     // Generate key data
@@ -255,10 +257,22 @@ Nonce * shared_get_service_nonce(Shared * shared) {
 }
 
 void shared_set_extra_data(Shared * shared, const char * ed) {
-    shared->extraData = ed;;
+    Buffer * temp = buffer_new(0);
+    printf(ed);
+    buffer_append_string(temp, ed);
+    printf(buffer_copy_to_new_string(temp));
+    shared->extraData = temp;
 }
 
-const char * shared_get_extra_data(Shared * shared) {
+void shared_set_extra_data_buffer(Shared * shared, Buffer * ed) {
+    shared->extraData = ed;
+}
+
+char * shared_get_extra_data(Shared * shared) {
+    return buffer_copy_to_new_string(shared->extraData);
+}
+
+DLL_PUBLIC Buffer * shared_get_extradata_buffer(Shared * shared){
     return shared->extraData;
 }
 

@@ -28,8 +28,8 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                 if (success) {
                     let codeJson = JSON(data: dataFromString)
                     let codeType = codeJson["t"].stringValue
-                    //let extraData = codeJson["ed"].stringValue
-                    //shared_set_extra_data(shared, extraData)
+
+                    
                     var address = codeJson["sa"].stringValue
                     print(address)
                     address = address.replacingOccurrences(of: "http://rendezvous.mypico.org/channel/" , with: "")
@@ -44,30 +44,8 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                         
                         let extraData = codeJson["ed"].stringValue
                         
-                        let servicePublicKeyString = codeJson["spk"].stringValue
-                        var servicePublicKey = EC_KEY_new()
-                        servicePublicKey = keypair_load_public_key_from_string(servicePublicKeyString);
-                        let commitBuffer = buffer_new(0)
-                        cryptosupport_generate_commitment_base64(servicePublicKey, commitBuffer)
-                        let commitCString = buffer_copy_to_new_string(commitBuffer)
-                        let commitSwiftString = String(cString: commitCString!)
                         keypair_generate(shared_get_pico_identity_key(shared))
                         
-                        let pub = buffer_new(0);
-                        let priv = buffer_new(0);
-                        cryptosupport_getpublicpem(keypair_getpublickey(shared_get_pico_identity_key(shared)), pub)
-                        cryptosupport_getprivatepem(keypair_getprivatekey(shared_get_pico_identity_key(shared)), priv)
-                        let picoPrivCString = buffer_copy_to_new_string(priv)
-                        let picoPubCString = buffer_copy_to_new_string(pub)
-                        
-                        let picoPrivSwiftString = String(cString: picoPrivCString!)
-                        let picoPubSwiftString = String(cString: picoPubCString!)
-                        
-                        let storeKey = KeyPair(pub: picoPubSwiftString, priv: picoPrivSwiftString, commit: commitSwiftString, extraData: extraData)
-                        
-                        shared_set_extra_data(shared, extraData)
-                        
-                        storeData(keypair: storeKey)
                         pairingExists = true
                         
                     }
@@ -85,17 +63,47 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                         }
                         
                         keypair_import_from_string(shared_get_pico_identity_key(shared), keyPairing.getPublicKey(), keyPairing.getPrivateKey())
+                        //shared_set_extra_data(shared, keyPairing.getExtraData().cString(using: String.Encoding.utf8))
                         shared_set_extra_data(shared, keyPairing.getExtraData().cString(using: String.Encoding.utf8))
                         
-                        var bn = BN_new()
-                        let num = "82019154470699086128524248488673846867876336512717"
-                        BN_dec2bn(&bn, num)
                         
                     }
 
                     let sigDate = Date()
                     if(pairingExists){
                         output = sigmaprover(channel, shared, code)
+                    }
+                    
+                    if (codeType == "KP"){
+                        
+                        let extraData = String(cString: shared_get_extra_data(shared))
+                        let servicePublicKeyString = codeJson["spk"].stringValue
+                        var servicePublicKey = EC_KEY_new()
+                        servicePublicKey = keypair_load_public_key_from_string(servicePublicKeyString);
+                        let commitBuffer = buffer_new(0)
+                        cryptosupport_generate_commitment_base64(servicePublicKey, commitBuffer)
+                        let commitCString = buffer_copy_to_new_string(commitBuffer)
+                        let commitSwiftString = String(cString: commitCString!)
+                        
+                        
+                        let pub = buffer_new(0);
+                        let priv = buffer_new(0);
+                        cryptosupport_getpublicpem(keypair_getpublickey(shared_get_pico_identity_key(shared)), pub)
+                        cryptosupport_getprivatepem(keypair_getprivatekey(shared_get_pico_identity_key(shared)), priv)
+                        let picoPrivCString = buffer_copy_to_new_string(priv)
+                        let picoPubCString = buffer_copy_to_new_string(pub)
+                        
+                        let picoPrivSwiftString = String(cString: picoPrivCString!)
+                        let picoPubSwiftString = String(cString: picoPubCString!)
+                        print(extraData)
+                        
+                        let storeKey = KeyPair(pub: picoPubSwiftString, priv: picoPrivSwiftString, commit: commitSwiftString, extraData: extraData)
+                        
+                        shared_set_extra_data(shared, extraData.cString(using: String.Encoding.utf8))
+                        print(shared_get_extra_data(shared))
+                        storeData(keypair: storeKey)
+                        pairingExists = true
+                        
                     }
 
                     let endDate = Date()
@@ -118,8 +126,10 @@ func handleCode(code:String, shared:OpaquePointer, vController:ViewController) -
                     }
                 }
                 else {
-                    print("Error received: %d", error!);
-                    vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Could not connect to TouchID")
+                 //   print("Error received: %d", error!);
+                    DispatchQueue.main.async {
+                        vController.displayMessage(title: "Code Found", body: "Authentication Unsuccesful - Could not connect to TouchID")
+                    }
 
                     output = false
                 }

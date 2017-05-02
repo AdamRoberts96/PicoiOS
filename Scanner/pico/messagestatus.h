@@ -45,6 +45,10 @@ void messagestatus_set(MessageStatus * messagestatus, Shared * shared, char cons
 void messagestatus_serialize(MessageStatus * messagestatus, Buffer * buffer);
 void messagestatus_set_session_id(MessageStatus * messagestatus, int sessionId);
 
+void messagestatus_set_prover(MessageStatus * messagestatus, Shared * shared);
+
+bool messagesstatus_deserialize(MessageStatus * messagestatus, Buffer * buffer);
+
 // Function definitions
 
 #endif

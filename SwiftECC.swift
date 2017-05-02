@@ -35,7 +35,7 @@ class KPair{
     let curve: Curve
     
     init(curve: Curve){
-        let initKey = randomBInt(bits: 500)
+        let initKey = randomBInt(bits: 96)
         self.privKey = initKey % curve.n
         self.pubKey = scalarMultiply(k: privKey, point: curve.basePoint, curve: curve)
         self.curve = curve
@@ -125,6 +125,7 @@ func inverseMod(k:BInt, p:BInt) -> BInt{
         oldS = temp
     }
     
+    
     let gcd = oldR
     
     //+p to make positive as BInt has trouble with negative mod
@@ -134,6 +135,11 @@ func inverseMod(k:BInt, p:BInt) -> BInt{
     //assert((k * x) % p == 1)
     
     return x % p
+}
+
+func inverseMod2(k: BInt, p: BInt) -> BInt{
+    let newP = p - BInt(2)
+    return mod_exp(k, newP, p)
 }
 
 func isOnCurve(point:Point, curve:Curve) -> Bool{
@@ -186,15 +192,13 @@ func pointAdd(point1: Point, point2: Point, curve: Curve) -> Point{
     var x3 = m * m - x1 - x2
     var y3 = y1 + m * (x3 - x1)
     
-    x3 = ((x3 + curve.p) % curve.p)
-    y3 = ((y3) % curve.p)
+    x3 = x3 % curve.p
+    y3 = y3 % curve.p
     
-    let out = Point(x: x3, y: y3)
+    return Point(x: x3, y: -y3)
     
     //assert(isOnCurve(point: out, curve: curve))
-    
-    return out
- 
+
 }
 
 //Returns a scalar multiple of the point using the double and add method
@@ -223,12 +227,15 @@ func scalarMultiply(k: BInt, point: Point, curve:Curve) -> Point{
         if (mult.isOdd()){
             result = pointAdd(point1: result, point2: add, curve: curve)
             i = i + 1
+            print("add")
         
         }
         
         add = pointAdd(point1: add, point2: add, curve: curve)
+        print("double")
         
         mult = mult >> 1
+        print(result.x.dec)
         i = i + 1
     }
     
@@ -249,50 +256,27 @@ func createKeyPairSwiftECC(curve: Curve){
     print(s1==s2)
 }
 
+func generateSharedSecret(selfKey: KPair, recievedPublicKey: Point, curve: Curve) -> BInt{
+    let sharedSecret = scalarMultiply(k: selfKey.privKey, point: recievedPublicKey, curve: curve)
+    return sharedSecret.x
+}
+
 func testOpenSSL() -> (){
     let curve = Curve()
-    let picoKey = Point(x: BInt(number: "acb7307f1d8ae781d62bff082dfe917fb8375da6bb9a4a64", withBase: 16), y: BInt(number: "17967aa745361ff29260950cf4d3e67ff4d08fff3a7eddfd", withBase: 16))
-    let serviceKey = Point(x: BInt(number: "93cc750640914fa885833ed0b59e69352bce4cdd", withBase: 16), y: BInt(number: "b25f565fda7ddbcec67965a20a4f7ca7dd98f2a0", withBase: 16))
-    let privateKeyPico = BInt(number: "05db888b0f4707db33f0ea7a7989e43c6f9a8afb5429c375", withBase: 16)
-    let testpub = scalarMultiply(k: privateKeyPico, point: curve.basePoint, curve: curve)
+    let serviceKey = Point(x: BInt(number: "b8180ee2c469163551b715176cbdfc173f1d08fac931abed", withBase: 16), y: BInt(number: "552c62d8546262218f7a8d24ad636823ec1437d119a39029", withBase: 16))
+    let privateKeyPico = BInt(number: "1053499951b5c37b55a15e068b96fabc873640982f6ef92d", withBase: 16)
     let secret = scalarMultiply(k: privateKeyPico, point: serviceKey, curve: curve)
-    
-    print(testpub == picoKey)
-    print("Testing keygen")
-    print(isOnCurve(point: testpub, curve: curve))
-    print(testpub.x.hex)
-    print(testpub.y.hex)
-    let testbuf = buffer_new(0)
-    buffer_append_string(testbuf, "B1386A986375340E19500FE399FBBF084B33C8DC6C6B3849")
-    let unenc = buffer_new(0)
-    base64_decode_buffer(testbuf, unenc)
-    print(buffer_copy_to_new_string(unenc))
-    
-    let bignumg = BN_new()
-    print("bignum")
-    BN_bin2bn("B1386A986375340E19500FE399FBBF084B33C8DC6C6B3849", 48, bignumg)
-    print(BN_bn2hex(bignumg).pointee)
-    var bignum2 = BN_new()
-    var ctx: UnsafeMutablePointer<BIGNUM>? = nil
-    //bignum2 = BN_hex2bn(&ctx as UnsafeMutablePointer<UnsafeMutablePointer<BIGNUM>?>?, "4cc47ac94813ebbbe486d77fc0d048bb7114078789e9aee3")
-    let comp = BN_cmp(bignumg, bignum2)
-    
-    let dat = BInt(number: "B1386A986375340E19500FE399FBBF084B33C8DC6C6B3849".lowercased(), withBase: 16)
-    print("Testing ecdh with openssl compat")
-    print(isOnCurve(point: serviceKey, curve: curve))
-    print(secret.x.hex)
-    print(secret.x.data)
-    print(secret.y.hex)
-    
+    print("Testing OpenSSL compat")
+    print(secret.x.asString(withBase: 16))
 }
 
 extension String {
     
-    func sha512() -> String {
+    func sha256() -> String {
         let data = self.data(using: .utf8)!
-        var digest = [UInt8](repeating: 0, count: Int(CC_SHA512_DIGEST_LENGTH))
+        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         data.withUnsafeBytes({
-            _ = CC_SHA512($0, CC_LONG(data.count), &digest)
+            _ = CC_SHA256($0, CC_LONG(data.count), &digest)
         })
         return digest.map({ String(format: "%02hhx", $0) }).joined(separator: "")
     }
@@ -300,7 +284,7 @@ extension String {
 }
 
 func hashMessage(message: String, curve: Curve) -> BInt{
-    let hash = message.sha512()
+    let hash = message.sha256()
     var intHash = BInt(number: hash, withBase: 16)
     
     while(intHash > curve.n){
@@ -309,7 +293,7 @@ func hashMessage(message: String, curve: Curve) -> BInt{
     return intHash
 }
 
-func signMessage(privateKey: BInt, message: String, curve: Curve) -> Point {
+func signMessage(privateKey: BInt, message: String, curve: Curve) -> (BInt, BInt) {
     
     let hash = hashMessage(message: message, curve: curve)
     var r: BInt = 0
@@ -330,20 +314,20 @@ func signMessage(privateKey: BInt, message: String, curve: Curve) -> Point {
         
     }
     
-    return Point(x: r, y: s)
+    return (r, s)
     
 }
 
-func verifySignature(publicKey: Point, message: String, signature: Point, curve: Curve) -> Bool{
+func verifySignature(publicKey: Point, message: String, r: BInt, s: BInt, curve: Curve) -> Bool{
     let hash = hashMessage(message: message, curve: curve)
-    let w = inverseMod(k: signature.y, p: curve.n)
+    let w = inverseMod(k: s, p: curve.n)
     let u1 = (hash * w) % curve.n
-    let u2 = (signature.x * w) % curve.n
+    let u2 = (r * w) % curve.n
     let point1 = scalarMultiply(k: u1, point: curve.basePoint, curve: curve)
     let point2 = scalarMultiply(k: u2, point: publicKey, curve: curve)
     let checkPoint = pointAdd(point1: point1, point2: point2, curve: curve)
     
-    if( (signature.x % curve.n) == (checkPoint.x % curve.n)){
+    if( (r % curve.n) == (checkPoint.x % curve.n)){
         return true
     }
     else {

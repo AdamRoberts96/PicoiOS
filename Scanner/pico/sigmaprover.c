@@ -72,9 +72,9 @@ bool sigmaprover(RVPChannel * channel, Shared * shared, const char * qrData) {
     channel_read(channel, buffer);
     
     messagestatus = messagestatus_new();
-    //messagestatus_set(<#MessageStatus *messagestatus#>, <#Shared *shared#>, <#const char *extraData#>, <#char status#>)
-    
-    
-    return true;
+    messagestatus_set_prover(messagestatus, shared);
+    result = messagesstatus_deserialize(messagestatus, buffer);
+    char * test = shared_get_extra_data(shared);
+    return result;
 }
 

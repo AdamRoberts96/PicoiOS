@@ -98,6 +98,9 @@ void keypair_generate(KeyPair * keypair) {
 
 	// TODO: Check when (if?) the group should be freed using EC_GROUP_clear_free
 	group = EC_GROUP_new_by_curve_name(NID_X9_62_prime192v1);
+    //group = EC_GROUP_new_by_curve_name(NID_secp192k1);
+    //group = EC_GROUP_new_by_curve_name(NID_secp521r1);
+    //group = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
 	EC_GROUP_set_asn1_flag(group, OPENSSL_EC_NAMED_CURVE);
 	EC_GROUP_set_point_conversion_form(group, POINT_CONVERSION_UNCOMPRESSED);
 	

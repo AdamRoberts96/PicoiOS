@@ -43,6 +43,8 @@ struct _MessageStatus {
 	int sessionId;
 	char status;
 	Buffer * extraData;
+    Buffer * iv;
+    Buffer * encryptedData;
 };
 
 // Function prototypes
@@ -60,6 +62,8 @@ MessageStatus * messagestatus_new() {
 	messagestatus = CALLOC(sizeof(MessageStatus), 1);
 	messagestatus->extraData = buffer_new(0);
 	messagestatus->sessionId = 0;
+    messagestatus->iv = buffer_new(0);
+    messagestatus->encryptedData = buffer_new(0);
 
 	return messagestatus;
 }
@@ -93,6 +97,10 @@ void messagestatus_set(MessageStatus * messagestatus, Shared * shared, const cha
 		buffer_append_string(messagestatus->extraData, extraData);
 	}
 	messagestatus->status = status;
+}
+
+void messagestatus_set_prover(MessageStatus * messagestatus, Shared * shared) {
+    messagestatus->shared = shared;
 }
 
 /**
@@ -154,6 +162,87 @@ void messagestatus_serialize(MessageStatus * messagestatus, Buffer * buffer) {
  */
 void messagestatus_set_session_id(MessageStatus * messagestatus, int sessionId) {
 	messagestatus->sessionId = sessionId;
+}
+
+bool messagesstatus_deserialize(MessageStatus * messagestatus, Buffer * buffer) {
+    Json * json;
+    char const * value;
+    Buffer * cleartext;
+    size_t start;
+    size_t next;
+    Buffer * mac;
+    bool result;
+    Buffer * servicePublicKeyBytes;
+    EC_KEY * serviceIdentityPublicKey;
+    Buffer * vEncKey;
+    Buffer * vMacKey;
+    Buffer * serviceIdentityPubEncoded;
+    Nonce * verifierNonce;
+    Buffer * base64;
+    
+    json = json_new();
+    result = json_deserialize_buffer(json, buffer);
+    servicePublicKeyBytes = buffer_new(0);
+    if (result) {
+        if (json_get_type(json, "sessionId") == JSONTYPE_DECIMAL) {
+            messagestatus->sessionId = json_get_decimal(json, "sessionId");
+        }
+        else {
+            LOG(LOG_ERR, "Missing sessionId\n");
+            result = false;
+        }
+    }
+    if (result) {
+        value = json_get_string(json, "iv");
+        if (value) {
+            base64_decode_string(value, messagestatus->iv);
+        }
+        else {
+            LOG(LOG_ERR, "Missing iv\n");
+            result = false;
+        }
+    }
+    if (result) {
+        value = json_get_string(json, "encryptedData");
+        if (value) {
+            base64_decode_string(value, messagestatus->encryptedData);
+        }
+        else {
+            LOG(LOG_ERR, "Missing encryptedData\n");
+            result = false;
+        }
+    }
+    cleartext = buffer_new(0);
+    if (result) {
+        vEncKey = shared_get_verifier_enc_key(messagestatus->shared);
+        result = cryptosupport_decrypt(vEncKey, messagestatus->iv, messagestatus->encryptedData, cleartext);
+    }
+    if (result) {
+        messagestatus->status = *buffer_copy_to_new_string(cleartext);
+        start = 1;
+        next = 1;
+        next = buffer_copy_lengthprepend(cleartext, start, messagestatus->extraData);
+        if (next > start) {
+            char * testclear = buffer_copy_to_new_string(messagestatus->extraData);
+            start = next;
+        }
+        else {
+            LOG(LOG_ERR, "Error deserializing decrypted length-prepended mac data\n");
+            result = false;
+        }
+    }
+    buffer_delete(cleartext);
+    
+    shared_set_extra_data_buffer(messagestatus->shared, messagestatus->extraData);
+    
+    json_delete(json);
+    
+    if ((messagestatus->status = (char)1)){
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
